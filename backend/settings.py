@@ -13,6 +13,9 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 from pathlib import Path
 import os
 import datetime
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -44,8 +47,6 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'imagekit',
     'django_cleanup',
-    # 'djoser',
-    # 'trench',
     'django_filters',
     'django_json_widget',
     'corsheaders', # DEV
@@ -111,18 +112,12 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 DATABASES = {
     'default': {
-        # 'ENGINE': os.environ.get("SQL_ENGINE", "django.db.backends.sqlite3"),
-        # 'NAME':  os.environ.get("SQL_DATABASE", BASE_DIR / "db.sqlite3"),
-        # "USER": os.environ.get("SQL_USER", "user"),
-        # "PASSWORD": os.environ.get("SQL_PASSWORD", "password"),
-        # "HOST": os.environ.get("SQL_HOST", "localhost"),
-        # "PORT": os.environ.get("SQL_PORT", "5432"),
-        "ENGINE": "django.db.backends.postgresql_psycopg2",
-        "NAME": "d9eige2do9k2bk",
-        "USER": "idzfgwdjthrsnz",
-        "PASSWORD": "05b3e2050eaca09e1aefc8f87d4bb72bec10489bae4a7ee71046ee672a39c5b9",
-        "HOST": "ec2-54-172-175-251.compute-1.amazonaws.com",
-        "PORT": "5432",
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'soho',
+        'USER': 'postgres',
+        'PASSWORD': 'admin',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
@@ -192,72 +187,6 @@ REST_FRAMEWORK = {
         'django_filters.rest_framework.DjangoFilterBackend',
     ],
 }
-
-
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_USE_TLS = True
-EMAIL_PORT = 587
-EMAIL_HOST_USER = "sayedarrafi142403@gmail.com"
-EMAIL_HOST_PASSWORD = "apravrnmndwfnftc"
-
-# DJOSER = {
-#     'LOGIN_FIELD': 'username',
-#     'SEND_ACTIVATION_EMAIL': True,
-#     'SEND_CONFIRMATION_EMAIL': True,
-#     'PASSWORD_CHANGED_EMAIL_CONFIRMATION': True,
-#     'USERNAME_CHANGED_EMAIL_CONFIRMATION': True,
-#     'ACTIVATION_URL': 'a/activate/{uid}/{token}',
-#     'USER_CREATE_PASSWORD_RETYPE': True,
-#     'SET_USERNAME_RETYPE': True,
-#     'SET_PASSWORD_RETYPE': True,
-#     'PASSWORD_RESET_CONFIRM_RETYPE': True,
-#     'USERNAME_RESET_CONFIRM_RETYPE': True,
-#     'LOGOUT_ON_PASSWORD_CHANGE': True,
-#     'PASSWORD_RESET_CONFIRM_URL': 'a/password/reset/{uid}/{token}',
-#     'USERNAME_RESET_CONFIRM_URL': 'a/email/reset/{uid}/{token}',
-#     'SERIALIZERS': {
-#         'user_create': 'account.serializers.account.UserCreateSerializer',
-#         'current_user': 'account.serializers.account.UserRetriveSerializer',
-#         'user': 'account.serializers.account.UserRetriveSerializer',
-#     },
-#     'PERMISSIONS': {
-#         # 'user_delete': ['rest_framework.permissions.IsAdminUser'],
-#     },
-#     'EMAIL': {
-#         'activation': 'djoser_mail.ActivationEmail',
-#         'confirmation': 'djoser_mail.ConfirmationEmail',
-#         'password_reset': 'djoser_mail.PasswordResetEmail',
-#         'password_changed_confirmation': 'djoser_mail.PasswordChangedConfirmationEmail',
-#         'username_changed_confirmation': 'djoser_mail.UsernameChangedConfirmationEmail',
-#         'username_reset': 'djoser_mail.UsernameResetEmail',
-#     }
-# }
-
-# TRENCH_AUTH = {
-#     'FROM_EMAIL': 'superfans@gmail.com',
-#     'USER_ACTIVE_FIELD': 'is_active',
-#     'BACKUP_CODES_QUANTITY': 5,
-#     'BACKUP_CODES_LENGTH': 10,  # keep (quantity * length) under 200
-#     'BACKUP_CODES_CHARACTERS': (
-#         'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
-#     ),
-#     'ENCRYPT_BACKUP_CODES': True,
-#     'SECRET_KEY_LENGTH': 32,
-#     'DEFAULT_VALIDITY_PERIOD': 30,
-#     'CONFIRM_DISABLE_WITH_CODE': False,
-#     'CONFIRM_BACKUP_CODES_REGENERATION_WITH_CODE': True,
-#     'ALLOW_BACKUP_CODES_REGENERATION': True,
-#     'APPLICATION_ISSUER_NAME': 'Superfans',
-#     'MFA_METHODS': {
-#         'app': {
-#             'VERBOSE_NAME': 'app',
-#             'VALIDITY_PERIOD': 60 * 10,
-#             'USES_THIRD_PARTY_CLIENT': True,
-#             'HANDLER': 'trench.backends.application.ApplicationBackend',
-#         },
-#     },
-# }
 
 DRF_FIREBASE_AUTH = {
     # path to JSON file with firebase secrets

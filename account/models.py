@@ -27,7 +27,7 @@ class AccountManager(BaseUserManager):
             self.model.USERNAME_FIELD)
         return self.get(**{case_insensitive_username_field: username})
 
-    def create_user(self, email, first_name, last_name, username):
+    def create_user(self, email, first_name, last_name, username, password=None):
         if not email:
             raise ValueError('Email address is required')
         if not first_name:
@@ -38,6 +38,8 @@ class AccountManager(BaseUserManager):
             raise ValueError('Username is required')
         user = self.model(email=self.normalize_email(email),
                           first_name=first_name, last_name=last_name, username=username)
+        if password:
+            user.set_password(password)
         user.save(using=self._db)
         return user
 

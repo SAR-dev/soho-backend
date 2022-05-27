@@ -25,10 +25,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-7ep-q)n#p55*o!nfg%y1^q-(my88&dy!hcx4n0$2@z0pj(0#gi')
+SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DEBUG', True)
+DEBUG = bool(os.getenv("DEBUG"))
 
 # Application definition
 
@@ -49,7 +49,7 @@ INSTALLED_APPS = [
     'django_cleanup',
     'django_filters',
     'django_json_widget',
-    'corsheaders', # DEV
+    'corsheaders',  # DEV
 
     # CREATED APPS
     'vote',
@@ -69,12 +69,12 @@ INSTALLED_APPS = [
     'contact',
 ]
 
-CORS_ALLOW_ALL_ORIGINS = True # DEV
+CORS_ALLOW_ALL_ORIGINS = bool(os.getenv("CORS_ALLOW_ALL_ORIGINS"))  # DEV
 
 SITE_ID = 1
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware', # DEV
+    'corsheaders.middleware.CorsMiddleware',  # DEV
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -112,12 +112,12 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'soho',
-        'USER': 'postgres',
-        'PASSWORD': 'admin',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'ENGINE': os.getenv("DB_ENGINE"),
+        'NAME': os.getenv("DB_NAME"),
+        'USER': os.getenv("DB_USER"),
+        'PASSWORD': os.getenv("DB_PASSWORD"),
+        'HOST': os.getenv("DB_HOST"),
+        'PORT': os.getenv("DB_PORT"),
     }
 }
 
@@ -159,7 +159,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT  = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -190,11 +190,10 @@ REST_FRAMEWORK = {
 
 DRF_FIREBASE_AUTH = {
     # path to JSON file with firebase secrets
-    'FIREBASE_SERVICE_ACCOUNT_KEY':
-        os.getenv('FIREBASE_SERVICE_ACCOUNT_KEY', os.path.join(BASE_DIR, 'soho.json')),
+    'FIREBASE_SERVICE_ACCOUNT_KEY': os.path.join(BASE_DIR, 'soho.json'),
 }
 
 # AUTHENTICATION_BACKENDS = ['account.auth.EmailOrUsernameModelBackend']
-FRONTEND_URL = 'https://superfansbd.web.app'
+FRONTEND_URL = os.getenv("FRONTEND_URL")
 # ONLY FOR DEVELOPMENT
-ALLOWED_HOSTS = os.environ.get('allowed_hosts', ['*'])
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS")

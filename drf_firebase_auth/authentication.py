@@ -22,7 +22,7 @@ from .models import (
     FirebaseUser,
     FirebaseUserProvider
 )
-from .utils import get_firebase_user_email
+from .utils import get_firebase_user_email, map_display_name_to_first_and_last_name
 from . import __title__
 
 log = logging.getLogger(__title__)
@@ -99,6 +99,7 @@ class FirebaseAuthentication(authentication.TokenAuthentication):
         Attempts to return or create a local User from Firebase user data
         """
         email = get_firebase_user_email(firebase_user)
+        first_name, last_name = map_display_name_to_first_and_last_name(firebase_user)
         log.info(f'_get_or_create_local_user - email: {email}')
         user = None
         try:
@@ -128,8 +129,8 @@ class FirebaseAuthentication(authentication.TokenAuthentication):
                 user = User.objects.create_user(
                     username=username,
                     email=email,
-                    first_name=[x.capitalize() for x in name.split("-")][0],
-                    last_name=[x.capitalize() for x in name.split("-")][1],
+                    first_name=first_name,
+                    last_name=last_name,
                 )
                 user.last_login = timezone.now()
                 if (

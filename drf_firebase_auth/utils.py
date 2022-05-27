@@ -62,3 +62,14 @@ def map_uuid_to_username(
         return str(uuid.uuid4())
     except Exception as e:
         raise Exception(e)
+    
+def map_display_name_to_first_and_last_name(
+    firebase_user: auth.UserRecord
+) -> list:
+    try:
+        first, *last = firebase_user.display_name.split()
+        first_name = first
+        last_name = " ".join(last) if len(last) > 0 else first
+        return [first_name, last_name]
+    except Exception as e:
+        raise Exception(e)

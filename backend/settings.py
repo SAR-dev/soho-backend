@@ -33,7 +33,6 @@ DEBUG = bool(os.getenv("DEBUG"))
 # Application definition
 
 INSTALLED_APPS = [
-    'whitenoise.runserver_nostatic',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -77,7 +76,6 @@ SITE_ID = 1
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',  # DEV
     'django.middleware.security.SecurityMiddleware',
-     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -122,9 +120,6 @@ DATABASES = {
         'PORT': os.getenv("DB_PORT"),
     }
 }
-import dj_database_url
-db_from_env = dj_database_url.config(conn_max_age=500)
-DATABASES['default'].update(db_from_env)
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -201,5 +196,3 @@ DRF_FIREBASE_AUTH = {
 FRONTEND_URL = os.getenv("FRONTEND_URL")
 # ONLY FOR DEVELOPMENT
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS").split(",")
-
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'

@@ -5,7 +5,6 @@ Authorization header, verifying, and locally authenticating
 """
 from typing import Tuple, Dict
 import logging
-import randomname
 import firebase_admin
 from firebase_admin import auth as firebase_auth
 from django.utils.encoding import smart_text
@@ -125,7 +124,6 @@ class FirebaseAuthentication(authentication.TokenAuthentication):
                 f'_get_or_create_local_user - username: {username}'
             )
             try:
-                name = randomname.get_name()
                 user = User.objects.create_user(
                     username=username,
                     email=email,

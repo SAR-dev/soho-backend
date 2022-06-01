@@ -123,3 +123,27 @@ class Category(models.Model):
 def unique_slug(sender, instance, *args, **kwargs):
     if len(instance.slug) == 0:
         instance.slug = generate_unique_slug(Category, instance.name)
+        
+class SubCategory(models.Model):
+    name = models.CharField(max_length=100)
+    slug = models.SlugField(max_length=50 ,unique=True, validators=[
+        RegexValidator(
+            regex='^[a-z0-9_-]{3,50}$',
+            message="Invalid slug format! Slug should be between 3-50 characters. Use hyphen '-' or underscore '_' between letters if needed. ",
+        ),
+    ])
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='category', default=None, blank=True, null=True)
+    
+    objects = models.Manager()
+    
+    def __str__(self):
+        return str(self.name)
+    
+    class Meta:
+        verbose_name_plural = "sub-categories"
+        ordering = ['-id']
+        
+@receiver(pre_save, sender=SubCategory)
+def unique_slug(sender, instance, *args, **kwargs):
+    if len(instance.slug) == 0:
+        instance.slug = generate_unique_slug(SubCategory, instance.name)

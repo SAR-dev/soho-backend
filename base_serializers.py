@@ -3,7 +3,7 @@ from post.models import Post
 from moderator.models import Moderator
 from award.models import Award
 from comment.models import Comment
-from group.models import Group, Category
+from group.models import Group, Category, SubCategory
 from image.models import Image
 from profiles.models import Profile
 from choice.models import Choice
@@ -50,6 +50,11 @@ class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = ['id', 'color', 'name', 'slug', 'about', 'group']
+        
+class SubCategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SubCategory
+        fields = ['id', 'name', 'slug']
         
 class AwardSerializer(serializers.ModelSerializer):
     class Meta:

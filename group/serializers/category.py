@@ -1,9 +1,9 @@
+from base_serializers import SubCategorySerializer, UserSerializer, ProfileSerializer, GroupSerializer, ImageSerializer, CategorySerializer
 from rest_framework import serializers
-from group.models import Group, Category
+from group.models import SubCategory, Category
 from image.models import Image
 from django.contrib.auth import get_user_model
 User = get_user_model()
-from base_serializers import UserSerializer, ProfileSerializer, GroupSerializer, ImageSerializer, CategorySerializer
 
 
 class GroupCategoryCreateSerializer(serializers.ModelSerializer):
@@ -14,19 +14,26 @@ class GroupCategoryCreateSerializer(serializers.ModelSerializer):
 
 
 class GroupCategoryListSerializer(serializers.ModelSerializer):
+    sub_categories = serializers.SerializerMethodField()
+
     class Meta:
         model = Category
-        fields = ['id', 'color', 'name', 'slug', 'about']
+        fields = ['id', 'color', 'name', 'slug', 'about', 'sub_categories']
+
+    def get_sub_categories(self, obj):
+        objects = SubCategorySerializer(data=SubCategory.objects.filter(category_id=obj.id), many=True)
+        objects.is_valid()
+        return objects.data
 
 
 class GroupCategoryReriveSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Category
-        fields = ['id', 'color', 'name', 'slug', 'about']
+        model=Category
+        fields=['id', 'color', 'name', 'slug', 'about']
 
 
 class GroupCategoryUpdateSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Category
-        fields = ['id', 'color', 'name', 'slug', 'about']
-        read_only_fields = ['slug']
+        model=Category
+        fields=['id', 'color', 'name', 'slug', 'about']
+        read_only_fields=['slug']

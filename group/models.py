@@ -132,7 +132,7 @@ class SubCategory(models.Model):
             message="Invalid slug format! Slug should be between 3-50 characters. Use hyphen '-' or underscore '_' between letters if needed. ",
         ),
     ])
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='category', default=None, blank=True, null=True)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='parent_category', default=None, blank=True, null=True)
     
     objects = models.Manager()
     

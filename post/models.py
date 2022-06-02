@@ -68,7 +68,9 @@ class Post(VoteModel, models.Model):
     choices = models.ManyToManyField(
         Choice, related_name='choices', default=None, blank=True)
     category = models.ForeignKey(
-        Category, on_delete=models.SET_NULL, default=None, blank=True, null=True)
+        Category, related_name="category", on_delete=models.SET_NULL, default=None, blank=True, null=True)
+    sub_category = models.ForeignKey(
+        Category, related_name="sub_category", on_delete=models.SET_NULL, default=None, blank=True, null=True)
     release_time = models.DateTimeField(null=True)
     duration = models.DurationField(null=True)
     thumbnail = models.ForeignKey(

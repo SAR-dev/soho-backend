@@ -57,7 +57,10 @@ class GroupRetriveSerializer(serializers.ModelSerializer):
         return obj.author == self.context.get('request').user
     
     def get_is_moderator(self, obj):
-        return Moderator.verified.filter(moderator = self.context.get('request').user, admin = obj.author).exists()
+        try:
+            return Moderator.verified.filter(moderator = self.context.get('request').user, admin = obj.author).exists()
+        except:
+            return False
 
     def get_common_member(self,obj):
         serializer  = UserSerializer(data = obj.subscribers.filter().values()[0])

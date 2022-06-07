@@ -53,7 +53,8 @@ class CategoryFilter(filters.FilterSet):
         }
 
 class GroupCategoryListView(generics.ListAPIView):
-    permission_classes = [IsGroupSubscriber]
+    # permission_classes = [IsGroupSubscriber]
+    permission_classes = [permissions.IsAuthenticated]
     serializer_class = GroupCategoryListSerializer
     pagination_class = PazeSizePagination
     filterset_class = CategoryFilter

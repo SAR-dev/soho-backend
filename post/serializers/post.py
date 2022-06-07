@@ -26,7 +26,7 @@ class PostCategorySerializer(serializers.ModelSerializer):
 class DiscussionPostCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
-        fields = ['id', 'content', 'images', 'category', 'link', 'status']
+        fields = ['id', 'content', 'images', 'category', 'sub_category', 'link', 'status']
 
     def validate(self, data):
         user = None
@@ -50,7 +50,7 @@ class DiscussionPostCreateSerializer(serializers.ModelSerializer):
 class PostCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
-        fields = ['id', 'content', 'images', 'link', 'category', 'release_time', 'duration',
+        fields = ['id', 'content', 'images', 'link', 'category', 'sub_category', 'release_time', 'duration',
                   'thumbnail', 'post_type', 'can_vote', 'can_comment', 'choices', 'status']
 
     def validate(self, data):
@@ -210,7 +210,7 @@ class PostReriveSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        fields = ['id', 'status', 'content', 'images', 'link', 'category', 'release_time',  'duration','thumbnail', 'is_blur', 'post_type', 'pinned_comment',
+        fields = ['id', 'status', 'content', 'images', 'link', 'category', 'sub_category', 'release_time',  'duration','thumbnail', 'is_blur', 'post_type', 'pinned_comment',
                   'can_vote', 'can_comment', 'author', 'group', 'choices', 'choices_voted', 'num_vote_up', 'bookmarks_count', 'bookmarked', 'upvoted', 'comments_count', 'available_awards', 'awards', 'created_at', 'updated_at']
 
     def get_bookmarked(self, obj):
@@ -239,7 +239,7 @@ class PostUpdateSerializer(serializers.ModelSerializer):
     author = UserSerializer(read_only=True)
     class Meta:
         model = Post
-        fields = ['id', 'content', 'images', 'link', 'category', 'release_time', 'duration',
+        fields = ['id', 'content', 'images', 'link', 'category', 'sub_category', 'release_time', 'duration',
                   'thumbnail', 'is_blur', 'post_type', 'can_vote', 'can_comment', 'choices', 'author', 'images']
 
     def validate(self, data):

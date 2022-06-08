@@ -54,7 +54,7 @@ class Post(VoteModel, models.Model):
     )
 
     TYPE_CHOICES = (
-        ('post', 'Post'),
+        ('discussion', 'Discussion'),
         ('premier', 'Premier'),
         ('ama', 'AMA'),
         ('poll', 'Poll'),
@@ -79,7 +79,7 @@ class Post(VoteModel, models.Model):
     
     is_blur = models.BooleanField(default=False)
     post_type = models.CharField(
-        max_length=20, choices=TYPE_CHOICES, default='post')
+        max_length=20, choices=TYPE_CHOICES, default='discussion')
     pinned_comment = models.IntegerField(default=None, blank=True, null=True)
 
     status = models.CharField(

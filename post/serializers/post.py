@@ -59,7 +59,7 @@ class PostCreateSerializer(serializers.ModelSerializer):
         if request and hasattr(request, "user"):
             user = request.user
 
-        if(data['post_type'] == 'post'):
+        if(data['post_type'] == 'discussion'):
             if(len(data['content']) < 10):
                 raise serializers.ValidationError(
                     {"content": "Text content is too short!"})
@@ -250,7 +250,7 @@ class PostUpdateSerializer(serializers.ModelSerializer):
         if request and hasattr(request, "user"):
             user = request.user
 
-        if(data['post_type'] == 'post'):
+        if(data['post_type'] == 'discussion'):
             if(len(data['content']) < 10):
                 raise serializers.ValidationError(
                     {"content": "Text content is too short!"})

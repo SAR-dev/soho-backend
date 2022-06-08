@@ -163,7 +163,7 @@ class GroupPostListView(generics.ListAPIView):
         if self.kwargs["type"] == "all":
             return Post.published.select_related('group').filter(group__author__username=self.kwargs["username"])
         elif self.kwargs["type"] == "discussion":
-            return Post.published.select_related('group').filter(group__author__username=self.kwargs["username"], post_type="post")
+            return Post.published.select_related('group').filter(group__author__username=self.kwargs["username"], post_type="discussion")
         elif self.kwargs["type"] == "poll":
             return Post.published.select_related('group').filter(group__author__username=self.kwargs["username"], post_type="poll")
         elif self.kwargs["type"] == "ama":

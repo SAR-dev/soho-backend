@@ -112,8 +112,17 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
+    # 'default': {
+    #     'ENGINE': os.getenv("DB_ENGINE"),
+    #     'NAME': os.getenv("DB_NAME"),
+    #     'USER': os.getenv("DB_USER"),
+    #     'PASSWORD': os.getenv("DB_PASSWORD"),
+    #     'HOST': os.getenv("DB_HOST"),
+    #     'PORT': os.getenv("DB_PORT"),
+    # }
     'default': dj_database_url.config(default="postgres://tmbuqouelpnhok:716b2f959815292c5788f5b4f50eade62647e4dfb969aa1d120c6e53e69d1fc2@ec2-3-226-163-72.compute-1.amazonaws.com:5432/d5ecpbapeajtvp")
 }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators

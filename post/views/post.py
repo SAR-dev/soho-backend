@@ -188,7 +188,15 @@ class CategoryPostListView(generics.ListAPIView):
     def get_queryset(self):
         return Post.published.select_related('group').filter(group__author__username=self.kwargs["username"], category__slug=self.kwargs["slug"])
 
+class SubCategoryPostListView(generics.ListAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = PostListSerializer
+    pagination_class = PazeSizePagination
+    filterset_class = PostFilter
 
+    def get_queryset(self):
+        return Post.published.select_related('group').filter(group__author__username=self.kwargs["username"], sub_category__slug=self.kwargs["slug"])
+    
 class PostListView(generics.ListAPIView):
     # permission_classes = [IsGroupSubscriber]
     permission_classes = [permissions.IsAuthenticated]

@@ -1,4 +1,4 @@
-from base_serializers import UserSerializer, ProfileSerializer, GroupSerializer, ImageSerializer, CategorySerializer, ChoiceSerializer, PostSerializer, PostGroupSerializer
+from base_serializers import SubCategorySerializer, UserSerializer, ProfileSerializer, GroupSerializer, ImageSerializer, CategorySerializer, ChoiceSerializer, PostSerializer, PostGroupSerializer
 from rest_framework import serializers
 from post.models import Post
 from moderator.models import Moderator
@@ -152,6 +152,7 @@ class PostListSerializer(serializers.ModelSerializer):
     images = ImageSerializer(many=True)
     choices = ChoiceSerializer(many=True)
     category = PostCategorySerializer()
+    sub_category = SubCategorySerializer()
     group = PostGroupSerializer()
     thumbnail = ImageSerializer()
     bookmarks_count = serializers.ReadOnlyField()
@@ -165,7 +166,7 @@ class PostListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        fields = ['id', 'status', 'content', 'images', 'link', 'category', 'release_time',  'duration','thumbnail', 'is_blur', 'post_type',
+        fields = ['id', 'status', 'content', 'images', 'link', 'category', 'sub_category', 'release_time',  'duration','thumbnail', 'is_blur', 'post_type',
                   'can_vote', 'can_comment', 'author', 'group', 'choices', 'choices_voted', 'num_vote_up', 'bookmarks_count', 'bookmarked', 'upvoted', 'comments_count', 'available_awards', 'awards', 'created_at', 'updated_at']
 
     def get_content(self, obj):
@@ -198,6 +199,7 @@ class PostReriveSerializer(serializers.ModelSerializer):
     images = ImageSerializer(many=True)
     choices = ChoiceSerializer(many=True)
     category = PostCategorySerializer()
+    sub_category = SubCategorySerializer()
     group = PostGroupSerializer()
     thumbnail = ImageSerializer()
     bookmarks_count = serializers.ReadOnlyField()

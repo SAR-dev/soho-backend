@@ -1,11 +1,12 @@
 from django.urls import path
-from post.views.post import GroupPostCreateView, PostRetriveView, GroupPostListView, PostUpdateView, CategoryPostListView, PostVoteView, PostBookmarkView, PostCanVoteView, PostCanCommentView, GroupDiscussionPostCreateView, PostChoiceVoteView, AddAwardView, PostDraftView, PostUpdateRetriveView, DraftPostListView, PostBookmarksView
+from post.views.post import GroupPostCreateView, PostRetriveView, GroupPostListView, PostUpdateView, CategoryPostListView, SubCategoryPostListView, PostVoteView, PostBookmarkView, PostCanVoteView, PostCanCommentView, GroupDiscussionPostCreateView, PostChoiceVoteView, AddAwardView, PostDraftView, PostUpdateRetriveView, DraftPostListView, PostBookmarksView
 
 app_name = 'post'
 
 urlpatterns = [
     path('list/group/<str:username>/type/<str:type>/', GroupPostListView.as_view(), name='group-post-list'),
     path('list/group/<str:username>/category/<str:slug>/', CategoryPostListView.as_view(), name='category-post-list'),
+    path('list/group/<str:username>/sub_category/<str:slug>/', SubCategoryPostListView.as_view(), name='sub-category-post-list'),
     path('drafts/', DraftPostListView.as_view(), name='drafts-post-list'),
     path('bookmarks/', PostBookmarksView.as_view(), name='bookmarks-post-list'),
     path('create/group/<str:username>/author/', GroupPostCreateView.as_view(), name='group-post-create'),

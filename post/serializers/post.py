@@ -34,9 +34,9 @@ class DiscussionPostCreateSerializer(serializers.ModelSerializer):
         if request and hasattr(request, "user"):
             user = request.user
 
-        if(len(data['content']) < 10):
+        if(len(data['content']) < 20):
             raise serializers.ValidationError(
-                {"content": "Content is too short!"})
+                {"content": "Text content is too short!"})
         for x in data['images']:
             if(x.author != user):
                 raise serializers.ValidationError(
@@ -62,7 +62,7 @@ class PostCreateSerializer(serializers.ModelSerializer):
         if(data['post_type'] == 'post'):
             if(len(data['content']) < 10):
                 raise serializers.ValidationError(
-                    {"content": "Content is too short!"})
+                    {"content": "Text content is too short!"})
             for x in data['images']:
                 if(x.author != user):
                     raise serializers.ValidationError(
@@ -76,7 +76,7 @@ class PostCreateSerializer(serializers.ModelSerializer):
         elif(data['post_type'] == 'announcement'):
             if(len(data['content']) < 10):
                 raise serializers.ValidationError(
-                    {"content": "Content is too short!"})
+                    {"content": "Text content is too short!"})
             for x in data['images']:
                 if(x.author != user):
                     raise serializers.ValidationError(
@@ -106,7 +106,7 @@ class PostCreateSerializer(serializers.ModelSerializer):
         elif(data['post_type'] == 'ama'):
             if(len(data['content']) < 10):
                 raise serializers.ValidationError(
-                    {"content": "Content is too short!"})
+                    {"content": "Text content is too short!"})
             if(data['release_time'] is None):
                 raise serializers.ValidationError(
                     {"release_time": "Release time is required for this type of post!"})
@@ -126,7 +126,7 @@ class PostCreateSerializer(serializers.ModelSerializer):
         elif(data['post_type'] == 'poll'):
             if(len(data['content']) < 10):
                 raise serializers.ValidationError(
-                    {"content": "Content is too short!"})
+                    {"content": "Text content is too short!"})
             for x in data['choices']:
                 if(x.author != user):
                     raise serializers.ValidationError(
@@ -253,7 +253,7 @@ class PostUpdateSerializer(serializers.ModelSerializer):
         if(data['post_type'] == 'post'):
             if(len(data['content']) < 10):
                 raise serializers.ValidationError(
-                    {"content": "Content is too short!"})
+                    {"content": "Text content is too short!"})
             for x in data['images']:
                 if(x.author != user):
                     raise serializers.ValidationError(
@@ -266,7 +266,7 @@ class PostUpdateSerializer(serializers.ModelSerializer):
         elif(data['post_type'] == 'announcement'):
             if(len(data['content']) < 10):
                 raise serializers.ValidationError(
-                    {"content": "Content is too short!"})
+                    {"content": "Text content is too short!"})
             for x in data['images']:
                 if(x.author != user):
                     raise serializers.ValidationError(
@@ -295,7 +295,7 @@ class PostUpdateSerializer(serializers.ModelSerializer):
         elif(data['post_type'] == 'ama'):
             if(len(data['content']) < 10):
                 raise serializers.ValidationError(
-                    {"content": "Content is too short!"})
+                    {"content": "Text content is too short!"})
             if(data['release_time'] is None):
                 raise serializers.ValidationError(
                     {"release_time": "Release time is required for this type of post!"})
@@ -314,7 +314,7 @@ class PostUpdateSerializer(serializers.ModelSerializer):
         elif(data['post_type'] == 'poll'):
             if(len(data['content']) < 10):
                 raise serializers.ValidationError(
-                    {"content": "Content is too short!"})
+                    {"content": "Text content is too short!"})
             for x in data['choices']:
                 if(x.author != user):
                     raise serializers.ValidationError(

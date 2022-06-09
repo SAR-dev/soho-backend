@@ -157,7 +157,7 @@ class PostListSerializer(serializers.ModelSerializer):
     thumbnail = ImageSerializer()
     bookmarks_count = serializers.ReadOnlyField()
     bookmarked = serializers.SerializerMethodField()
-    content = serializers.SerializerMethodField()
+    # content = serializers.SerializerMethodField()
     upvoted = serializers.SerializerMethodField()
     release_time = serializers.DateTimeField(format="%Y-%m-%d %H:%M")
     choices_voted = serializers.SerializerMethodField()
@@ -169,8 +169,8 @@ class PostListSerializer(serializers.ModelSerializer):
         fields = ['id', 'status', 'content', 'images', 'link', 'category', 'sub_category', 'release_time',  'duration','thumbnail', 'is_blur', 'post_type',
                   'can_vote', 'can_comment', 'author', 'group', 'choices', 'choices_voted', 'num_vote_up', 'bookmarks_count', 'bookmarked', 'upvoted', 'comments_count', 'available_awards', 'awards', 'created_at', 'updated_at']
 
-    def get_content(self, obj):
-        return truncate_html_words(obj.content, 80)
+    # def get_content(self, obj):
+    #     return truncate_html_words(obj.content, 80)
 
     def get_bookmarked(self, obj):
         return obj.bookmarks.filter(pk=self.context.get('request').user.id).exists()

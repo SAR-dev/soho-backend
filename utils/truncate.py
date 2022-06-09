@@ -53,7 +53,7 @@ def truncate_html_words(s, num):
     if words <= length:
         # Don't try to close tags if we don't need to truncate
         return s
-    out = s[:ellipsis_pos] + ' <span class="gray-text">Read more...</span>'
+    out = s[:ellipsis_pos] + ' <a name="link">Read more...</a>'
     # Close any tags still open
     for tag in open_tags:
         out += '</%s>' % tag

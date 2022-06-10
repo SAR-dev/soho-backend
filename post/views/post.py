@@ -270,20 +270,8 @@ class GroupPostCreateView(generics.CreateAPIView):
 class PostRetriveView(generics.RetrieveAPIView):
     # permission_classes = [IsPostGroupSubscriber]
     permission_classes = [permissions.IsAuthenticated]
+    queryset = Post.published.all()
     serializer_class = PostReriveSerializer
-
-    def get_object(self):
-        try:
-            post = Post.published.get(pk=self.kwargs['pk'])
-            if post.status == "published":
-                return post
-            else:
-                if post.author.id == self.request.user.id:
-                    return post
-                else:
-                    raise NotFound(detail="Error 404, Not Found!", code=404)
-        except ObjectDoesNotExist:
-            raise NotFound(detail="Error 404, Not Found!", code=404)
 
 
 class PostUpdateRetriveView(generics.RetrieveAPIView):

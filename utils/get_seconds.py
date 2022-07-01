@@ -8,7 +8,7 @@ def get_seconds(time_str):
         res = int(hh) * 3600 + int(mm) * 60 + int(ss)
         return res
     else:
-        dd, tt = time_str.split(" days, ")
+        dd, tt = time_str.split(" day, ")
         hh, mm, ss = tt.split(':')
         res = int(dd) * 86400 + int(hh) * 3600 + int(mm) * 60 + int(ss)
         return res

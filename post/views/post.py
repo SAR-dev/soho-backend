@@ -10,7 +10,7 @@ from post.serializers.post import PostCreateSerializer, PostReriveSerializer, Po
 from utils.paginations import PazeSizePagination
 from utils.get_seconds import get_seconds
 from rest_framework import generics, views, response, permissions, serializers
-from rest_framework.exceptions import NotFound
+from rest_framework.exceptions import NotFound, PermissionDenied
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import get_object_or_404
 from django.core.serializers import serialize
@@ -515,9 +515,7 @@ class PostChoiceVoteView(views.APIView):
                     'upvoted': True,
                 })
             else:
-                return response.Response({
-                    'error': {'message' : 'Sorry, Time duration expired!'}
-                })
+                raise PermissionDenied(detail="Sorry, Time duration expired!")
         except ObjectDoesNotExist:
             raise NotFound(detail="Error 404, Not Found!", code=404)
 
@@ -536,9 +534,7 @@ class PostChoiceVoteView(views.APIView):
                     'upvoted': False,
                 })
             else:
-                return response.Response({
-                    'error': {'message' : 'Sorry, Time duration expired!'}
-                })
+                raise PermissionDenied(detail="Sorry, Time duration expired!")
         except ObjectDoesNotExist:
             raise NotFound(detail="Error 404, Not Found!", code=404)
 

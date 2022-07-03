@@ -199,3 +199,5 @@ DRF_FIREBASE_AUTH = {
 FRONTEND_URL = os.getenv("FRONTEND_URL")
 # ONLY FOR DEVELOPMENT
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS").split(",")
+# WHITENOISE
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'

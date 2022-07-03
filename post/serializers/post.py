@@ -170,7 +170,10 @@ class PostListSerializer(serializers.ModelSerializer):
                   'can_vote', 'can_comment', 'author', 'group', 'choices', 'choices_voted', 'num_vote_up', 'bookmarks_count', 'bookmarked', 'upvoted', 'comments_count', 'available_awards', 'awards', 'created_at', 'updated_at']
 
     def get_content(self, obj):
-        return truncate_html_words(obj.content, 80)
+        if (obj.post_type == "announcement"):
+            return obj.content
+        else:
+            return truncate_html_words(obj.content, 80)
 
     def get_bookmarked(self, obj):
         return obj.bookmarks.filter(pk=self.context.get('request').user.id).exists()

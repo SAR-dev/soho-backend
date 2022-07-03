@@ -9,7 +9,7 @@ from rest_framework import filters as rest_framework_filters
 from django.shortcuts import get_object_or_404
 from django.core.serializers import serialize
 from group.serializers.group import GroupListSerializer, GroupUpdateSerializer, GroupRetriveSerializer,GroupRulesRetriveSerializer, GroupSubscribersSerializer, GroupBlacklistsSerializer, GroupLeaderboardSerializer
-from rest_framework.exceptions import NotFound
+from rest_framework.exceptions import NotFound, PermissionDenied
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth import get_user_model
 User = get_user_model()
@@ -153,7 +153,7 @@ class GroupSubscribeView(views.APIView):
                     Activity.objects.create(target=request.user.id, group_id=group.id,
                                     sender_id=request.user.id, target_type="user", verb="joined")
                 else:
-                    return response.Response({"detail": "Invalid token!"}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+                    raise PermissionDenied(detail="Sorry, the token is either invalid or expired expired!")
             elif group.status=='private':
                 group.subscribers.add(request.user.id)
                 subscribed = True
@@ -170,7 +170,7 @@ class GroupSubscribeView(views.APIView):
             )
 
             if group.author.id == request.user.id:
-                return response.Response({"detail": "You can not unsubscribe your own group!"}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+                raise PermissionDenied(detail="Sorry, You can not unsubscribe your own group!")
             else:
                 subscribed = True
                 if group.subscribers.filter(pk=request.user.id).exists():
@@ -220,7 +220,7 @@ class GroupBlacklistSubscriberView(views.APIView):
                     'blacklisted': blacklisted,
                 })
             else:
-                return response.Response({"detail": "You are author. You can not blacklist yourself."}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+                raise PermissionDenied(detail="Sorry, You can not blacklist yourself!")
         except ObjectDoesNotExist:
             raise NotFound(detail="Error 404, Not Found!", code=404)
 

@@ -41,7 +41,7 @@ class Group(models.Model):
     author = models.OneToOneField(User, on_delete=models.CASCADE)
     
     title = models.CharField(max_length=50, null=True, blank=True)
-    about = models.CharField(max_length=400, null=True, blank=True)
+    slogan = models.CharField(max_length=30, null=True, blank=True)
     rules = models.TextField(default=None, blank=True, null=True)
     members_name = models.CharField(max_length=10, default="Members")
     color = models.CharField(max_length=100, default="#6B46C1", validators=[
@@ -108,6 +108,7 @@ class Category(models.Model):
             message="Invalid color format. RGB hex color format needed.",
         ),
     ])
+    emoji = models.CharField(max_length=500, default="")
     group = models.ForeignKey(Group, on_delete=models.CASCADE, related_name='group', default=None, blank=True, null=True)
     
     objects = models.Manager()

@@ -26,7 +26,7 @@ class GroupListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Group
-        fields = ['id', 'title', 'about', 'members_name', 'color', 'status', 'subscribers_count',
+        fields = ['id', 'title', 'slogan', 'members_name', 'color', 'status', 'subscribers_count',
                   'subscribed', 'author', 'created_at', 'updated_at']
 
     def get_subscribed(self, obj):
@@ -40,12 +40,11 @@ class GroupRetriveSerializer(serializers.ModelSerializer):
     post_count = serializers.SerializerMethodField()
     is_admin = serializers.SerializerMethodField()
     is_moderator = serializers.SerializerMethodField()
-    common_member = serializers.SerializerMethodField()
 
     class Meta:
         model = Group
-        fields = ['id', 'title', 'about', 'members_name', 'color',  'status', 'subscribers_count',
-                  'subscribed', 'post_count', 'author', 'common_member', 'is_admin', 'is_moderator', 'created_at', 'updated_at']
+        fields = ['id', 'title', 'slogan', 'members_name', 'color',  'status', 'subscribers_count',
+                  'subscribed', 'post_count', 'author', 'is_admin', 'is_moderator', 'created_at', 'updated_at']
 
     def get_post_count(self, obj):
         return Post.published.filter(group=obj).count()
@@ -61,11 +60,6 @@ class GroupRetriveSerializer(serializers.ModelSerializer):
             return Moderator.verified.filter(moderator = self.context.get('request').user, admin = obj.author).exists()
         except:
             return False
-
-    def get_common_member(self,obj):
-        serializer  = UserSerializer(data = obj.subscribers.filter().values()[0])
-        serializer.is_valid()
-        return serializer.data
     
 class GroupRulesRetriveSerializer(serializers.ModelSerializer):
     author = UserSerializer()
@@ -78,7 +72,7 @@ class GroupRulesRetriveSerializer(serializers.ModelSerializer):
 class GroupUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
-        fields = ['about', 'members_name', 'color', 'title', 'status', 'token', 'rules']
+        fields = ['slogan', 'members_name', 'color', 'title', 'status', 'token', 'rules']
 
 
 class GroupSubscribersSerializer(serializers.ModelSerializer):

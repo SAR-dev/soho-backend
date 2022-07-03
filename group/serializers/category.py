@@ -9,7 +9,7 @@ User = get_user_model()
 class GroupCategoryCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = ['id', 'color', 'name', 'slug', 'about']
+        fields = ['id', 'color', 'name', 'slug', 'about', 'emoji']
         read_only_fields = ['slug']
 
 
@@ -18,7 +18,7 @@ class GroupCategoryListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Category
-        fields = ['id', 'color', 'name', 'slug', 'about', 'sub_categories']
+        fields = ['id', 'color', 'name', 'slug', 'about', 'sub_categories', 'emoji']
 
     def get_sub_categories(self, obj):
         objects = SubCategorySerializer(data=SubCategory.objects.filter(category_id=obj.id), many=True)
@@ -29,11 +29,11 @@ class GroupCategoryListSerializer(serializers.ModelSerializer):
 class GroupCategoryReriveSerializer(serializers.ModelSerializer):
     class Meta:
         model=Category
-        fields=['id', 'color', 'name', 'slug', 'about']
+        fields=['id', 'color', 'name', 'slug', 'about', 'emoji']
 
 
 class GroupCategoryUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model=Category
-        fields=['id', 'color', 'name', 'slug', 'about']
+        fields=['id', 'color', 'name', 'slug', 'about', 'emoji']
         read_only_fields=['slug']

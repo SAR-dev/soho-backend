@@ -35,7 +35,7 @@ class GroupSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Group
-        fields = ['id', 'about', 'members_name', 'color',  'status', 'title', 'author', 'is_admin', 'is_moderator', 'created_at', 'updated_at']
+        fields = ['id', 'slogan', 'members_name', 'color',  'status', 'title', 'author', 'is_admin', 'is_moderator', 'created_at', 'updated_at']
         
     def get_is_admin(self, obj):
         return obj.author == self.context.get('request').user
@@ -49,7 +49,7 @@ class CategorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Category
-        fields = ['id', 'color', 'name', 'slug', 'about', 'group']
+        fields = ['id', 'color', 'name', 'slug', 'about', 'group', 'emoji']
         
 class SubCategorySerializer(serializers.ModelSerializer):
     class Meta:

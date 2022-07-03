@@ -288,15 +288,17 @@ class GroupLeaderboardView(generics.ListAPIView):
             prev_month_date = date.today().replace(day=1) - timedelta(days=1)
             prev_month_month = prev_month_date.month
             prev_month_year = prev_month_date.year
+            ranking = ''
             if self.kwargs['timespan'] == "weekly":
-                ranking = Activity.objects.select_related('group').filter(group__author__username = self.kwargs['username'], verb="clapped", created_at__week=prev_week_week, created_at__year=prev_week_year).values('reciever').annotate(claps=Count('reciever')).order_by('-claps')[:5]
+                ranking = Activity.objects.select_related('group').filter(group__author__username = self.kwargs['username'], verb="clapped", created_at__week=prev_week_week, created_at__year=prev_week_year).values('reciever').annotate(claps=Count('reciever')).order_by('-claps')[:100]
             elif self.kwargs['timespan'] == "monthly":
-                ranking = Activity.objects.select_related('group').filter(group__author__username = self.kwargs['username'], verb="clapped", created_at__month=prev_month_month, created_at__year=prev_month_year).values('reciever').annotate(claps=Count('reciever')).order_by('-claps')[:5]
+                ranking = Activity.objects.select_related('group').filter(group__author__username = self.kwargs['username'], verb="clapped", created_at__month=prev_month_month, created_at__year=prev_month_year).values('reciever').annotate(claps=Count('reciever')).order_by('-claps')[:100]
             elif self.kwargs['timespan'] == "alltime":
-                ranking = Activity.objects.select_related('group').filter(group__author__username = self.kwargs['username'], verb="clapped").values('reciever').annotate(claps=Count('reciever')).order_by('-claps')[:5]
+                ranking = Activity.objects.select_related('group').filter(group__author__username = self.kwargs['username'], verb="clapped").values('reciever').annotate(claps=Count('reciever')).order_by('-claps')[:100]
             else:
-                ranking = Activity.objects.select_related('group').filter(group__author__username = self.kwargs['username'], verb="clapped").values('reciever').annotate(claps=Count('reciever')).order_by('-claps')[:5]
+                ranking = Activity.objects.select_related('group').filter(group__author__username = self.kwargs['username'], verb="clapped").values('reciever').annotate(claps=Count('reciever')).order_by('-claps')[:100]
             results = []
+            
             for item in ranking:
                 results.append({'reciever': User.objects.get(pk=item['reciever']), 'claps': item["claps"]})
             return results

@@ -5,9 +5,9 @@ from rest_framework import filters as rest_framework_filters
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.exceptions import NotFound
 from django.contrib.auth import get_user_model
+from account.serializers.account import UserListSerializer, UserUpdateSerializer
 User = get_user_model()
-from account.serializers.account import UserListSerializer
-        
+
 class UserListView(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = UserListSerializer
@@ -16,11 +16,10 @@ class UserListView(generics.ListAPIView):
     filter_backends = [rest_framework_filters.SearchFilter]
     search_fields = ['email', 'first_name', 'last_name', 'username']
 
-class MeRetriveView(generics.RetrieveAPIView):
+class MeRetriveView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [permissions.IsAuthenticated]
-    serializer_class = UserListSerializer
-    queryset = User.objects.all()
-
+    serializer_class = UserUpdateSerializer
+    
     def get_object(self):
         try:
             return User.objects.get(id=self.request.user.id)

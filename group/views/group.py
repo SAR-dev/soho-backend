@@ -136,6 +136,33 @@ class GroupSubscribeView(views.APIView):
         except ObjectDoesNotExist:
             raise NotFound(detail="Error 404, Not Found!", code=404)
 
+    # def post(self, request, username, token=None):
+    #     try:
+    #         group = Group.objects.select_related('author').get(
+    #             author__username=username
+    #         )
+            
+    #         subscribed = False
+    #         if group.subscribers.filter(pk=request.user.id).exists():
+    #             subscribed = True
+    #         elif group.status=='public':
+    #             if group.token == token:
+    #                 group.subscribers.add(request.user.id)
+    #                 subscribed = True
+    #                 # group joined
+    #                 Activity.objects.create(target=request.user.id, group_id=group.id,
+    #                                 sender_id=request.user.id, target_type="user", verb="joined")
+    #             else:
+    #                 raise PermissionDenied(detail="Sorry, the token is either invalid or expired expired!")
+    #         elif group.status=='private':
+    #             group.subscribers.add(request.user.id)
+    #             subscribed = True
+    #         return response.Response({
+    #             'subscribed': subscribed,
+    #         })
+    #     except ObjectDoesNotExist:
+    #         raise NotFound(detail="Error 404, Not Found!", code=404)
+
     def post(self, request, username, token=None):
         try:
             group = Group.objects.select_related('author').get(
@@ -146,17 +173,12 @@ class GroupSubscribeView(views.APIView):
             if group.subscribers.filter(pk=request.user.id).exists():
                 subscribed = True
             elif group.status=='public':
-                if group.token == token:
-                    group.subscribers.add(request.user.id)
-                    subscribed = True
-                    # group joined
-                    Activity.objects.create(target=request.user.id, group_id=group.id,
-                                    sender_id=request.user.id, target_type="user", verb="joined")
-                else:
-                    raise PermissionDenied(detail="Sorry, the token is either invalid or expired expired!")
-            elif group.status=='private':
                 group.subscribers.add(request.user.id)
                 subscribed = True
+                Activity.objects.create(target=request.user.id, group_id=group.id,
+                                sender_id=request.user.id, target_type="user", verb="joined")
+            elif group.status=='private':
+                raise PermissionDenied(detail="Sorry, joining in private group is turned of temporarily!")
             return response.Response({
                 'subscribed': subscribed,
             })

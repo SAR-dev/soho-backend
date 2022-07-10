@@ -22,7 +22,7 @@ class RenameAndRelocateImage(object):
         ext = filename.split('.')[-1]
         filename = '{}.{}'.format(uuid4().hex, ext)
         return os.path.join(self.path, filename)
-rename_and_relocate_avatar = RenameAndRelocateImage("images/group/avatar/")
+rename_and_relocate_cover = RenameAndRelocateImage("images/group/cover/")
 
 class Group(models.Model):
     class PublicGroup(models.Manager):
@@ -56,7 +56,11 @@ class Group(models.Model):
             message="Invalid token format! Token should be alphanumeric of 10 digit.",
         ),
     ])
-
+    cover = ProcessedImageField(upload_to=rename_and_relocate_cover,
+                                 default='images/avatar.jpg',
+                                 processors=[ResizeToFit(width=1400)],
+                                 format='JPEG',
+                                 options={'quality': 60})
     subscribers = models.ManyToManyField(User, related_name='subscribers', default=None, blank=True)
     blacklists = models.ManyToManyField(User, related_name='blacklists', default=None, blank=True)
     moderators = models.ManyToManyField(User, related_name='moderators', default=None, blank=True)

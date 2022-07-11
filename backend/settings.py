@@ -199,4 +199,4 @@ FRONTEND_URL = ["https://soho-k9ir.onrender.com"]
 # ONLY FOR DEVELOPMENT
 ALLOWED_HOSTS = ["*"]
 # WHITENOISE
-STATICFILES_STORAGE = "whitenoise.storage.CompressedStaticFilesStorage"
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"

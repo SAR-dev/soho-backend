@@ -72,7 +72,7 @@ class GroupRulesRetriveSerializer(serializers.ModelSerializer):
 class GroupUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
-        fields = ['slogan', 'members_name', 'color', 'title', 'status', 'token', 'rules']
+        fields = ['slogan', 'members_name', 'color', 'title', 'status', 'token', 'rules', 'cover']
 
 
 class GroupSubscribersSerializer(serializers.ModelSerializer):

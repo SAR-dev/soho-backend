@@ -95,6 +95,6 @@ tzdata==2022.1
 uritemplate==3.0.1
 urllib3==1.26.6
 virtualenv==20.14.1
-whitenoise==6.1.0
+whitenoise==3.3.1
 wrapt==1.12.1
 yubico-client==1.13.0

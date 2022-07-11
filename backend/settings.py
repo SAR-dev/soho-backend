@@ -15,12 +15,11 @@ import os
 import datetime
 import dj_database_url
 from django.core.wsgi import get_wsgi_application
-from whitenoise.django import DjangoWhiteNoise
-
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "backend.settings")
+from whitenoise import WhiteNoise
 
 application = get_wsgi_application()
-application = DjangoWhiteNoise(application)
+application = WhiteNoise(application)
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent

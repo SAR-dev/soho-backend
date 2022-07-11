@@ -13,10 +13,14 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 from pathlib import Path
 import os
 import datetime
-from dotenv import load_dotenv
 import dj_database_url
+from django.core.wsgi import get_wsgi_application
+from whitenoise.django import DjangoWhiteNoise
 
-load_dotenv()
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "backend.settings")
+
+application = get_wsgi_application()
+application = DjangoWhiteNoise(application)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,10 +30,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv("SECRET_KEY")
+SECRET_KEY = "(q!c*tm^8ggos8vp4)#jj#xxm8itgijob+l@e*sdsif*!ohjbr"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = bool(os.getenv("DEBUG"))
+DEBUG = True
 
 # Application definition
 
@@ -70,7 +74,7 @@ INSTALLED_APPS = [
     'contact',
 ]
 
-CORS_ALLOW_ALL_ORIGINS = bool(os.getenv("CORS_ALLOW_ALL_ORIGINS"))  # DEV
+CORS_ALLOW_ALL_ORIGINS = True
 
 SITE_ID = 1
 
@@ -112,15 +116,7 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': os.getenv("DB_ENGINE"),
-        'NAME': os.getenv("DB_NAME"),
-        'USER': os.getenv("DB_USER"),
-        'PASSWORD': os.getenv("DB_PASSWORD"),
-        'HOST': os.getenv("DB_HOST"),
-        'PORT': os.getenv("DB_PORT"),
-    }
-    # 'default': dj_database_url.config(default="postgres://tmbuqouelpnhok:716b2f959815292c5788f5b4f50eade62647e4dfb969aa1d120c6e53e69d1fc2@ec2-3-226-163-72.compute-1.amazonaws.com:5432/d5ecpbapeajtvp")
+    'default': dj_database_url.config(default="postgres://emgbhxtmtcueew:44b90813d0ce36f5fd8fb4c4f60a2b6c104b9a1695d2190d16b6c3568a6379e6@ec2-3-223-169-166.compute-1.amazonaws.com:5432/d3lsmilnr5rnqf")
 }
 
 
@@ -196,8 +192,8 @@ DRF_FIREBASE_AUTH = {
 }
 
 # AUTHENTICATION_BACKENDS = ['account.auth.EmailOrUsernameModelBackend']
-FRONTEND_URL = os.getenv("FRONTEND_URL")
+FRONTEND_URL = ["https://soho-k9ir.onrender.com"]
 # ONLY FOR DEVELOPMENT
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS").split(",")
+ALLOWED_HOSTS = ["*"]
 # WHITENOISE
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'

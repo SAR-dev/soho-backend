@@ -111,7 +111,7 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 DATABASES = {
     'default': dj_database_url.config(
-        default="postgres://emgbhxtmtcueew:44b90813d0ce36f5fd8fb4c4f60a2b6c104b9a1695d2190d16b6c3568a6379e6@ec2-3-223-169-166.compute-1.amazonaws.com:5432/d3lsmilnr5rnqf"
+        'DATABASE_URL'
     )
 }
 

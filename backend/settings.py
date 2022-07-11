@@ -12,13 +12,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 import os
-import datetime
 import dj_database_url
-from django.core.wsgi import get_wsgi_application
-from whitenoise import WhiteNoise
-
-application = get_wsgi_application()
-application = WhiteNoise(application)
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.

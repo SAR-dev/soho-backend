@@ -9,7 +9,6 @@ class CommentListSerializer(serializers.ModelSerializer):
     hands_count = serializers.ReadOnlyField()
     upvoted = serializers.SerializerMethodField()
     hands_raised = serializers.SerializerMethodField()
-    parent = CommentSerializer()
     class Meta:
         model = Comment
         fields = ['id', 'is_active', 'content', 'mention', 'author', 'post', 'parent', 'upvoted', 'num_vote_up', 'hands_raised', 'hands_count', 'created_at']

@@ -57,7 +57,7 @@ class Group(models.Model):
         ),
     ])
     cover = ProcessedImageField(upload_to=rename_and_relocate_cover,
-                                 default='images/avatar.jpg',
+                                 default='images/cover.jpg',
                                  processors=[ResizeToFit(width=1400)],
                                  format='JPEG',
                                  options={'quality': 60})

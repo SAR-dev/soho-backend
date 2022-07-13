@@ -61,7 +61,7 @@ class GroupFilter(filters.FilterSet):
 
 
 class GroupListView(generics.ListAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    # permission_classes = [permissions.IsAuthenticated]
     serializer_class = GroupListSerializer
     queryset = Group.objects.all()
     pagination_class = PazeSizePagination
@@ -83,7 +83,7 @@ class GroupSubscribedListView(generics.ListAPIView):
 
 
 class GroupRetriveView(generics.RetrieveAPIView):
-    permission_classes = [IsNotBlacklisted]
+    # permission_classes = [IsNotBlacklisted]
     serializer_class = GroupRetriveSerializer
 
     def get_object(self):
@@ -95,7 +95,7 @@ class GroupRetriveView(generics.RetrieveAPIView):
             raise NotFound(detail="Error 404, Not Found!", code=404)
         
 class GroupRulesRetriveView(generics.RetrieveAPIView):
-    permission_classes = [IsNotBlacklisted]
+    # permission_classes = [IsNotBlacklisted]
     serializer_class = GroupRulesRetriveSerializer
 
     def get_object(self):
@@ -121,7 +121,7 @@ class GroupUpdateView(generics.RetrieveUpdateAPIView):
 
 
 class GroupSubscribeView(views.APIView):
-    permission_classes = [IsNotBlacklisted]
+    permission_classes = [permissions.IsAuthenticated & IsNotBlacklisted]
 
     def get(self, request, username, token=None):
         try:
@@ -266,7 +266,7 @@ class GroupBlacklistSubscriberView(views.APIView):
 
 
 class GroupSubscribersView(generics.ListAPIView):
-    permission_classes = [IsNotBlacklisted]
+    permission_classes = [permissions.IsAuthenticated & IsNotBlacklisted]
     serializer_class = GroupSubscribersSerializer
     pagination_class = PazeSizePagination
     filter_backends = [rest_framework_filters.SearchFilter]
@@ -298,7 +298,7 @@ class GroupBlacklistView(generics.ListAPIView):
 
 
 class GroupLeaderboardView(generics.ListAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    # permission_classes = [permissions.IsAuthenticated]
     serializer_class = GroupLeaderboardSerializer
     
     def get_queryset(self):

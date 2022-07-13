@@ -1,4 +1,4 @@
-from base_serializers import UserSerializer, ProfileSerializer, GroupSerializer, ImageSerializer, CategorySerializer, ChoiceSerializer, PostSerializer
+from base_serializers import UserSerializer, CommentSerializer, ProfileSerializer, GroupSerializer, ImageSerializer, CategorySerializer, ChoiceSerializer, PostSerializer
 from rest_framework import serializers
 from .models import Comment
 import re
@@ -9,6 +9,7 @@ class CommentListSerializer(serializers.ModelSerializer):
     hands_count = serializers.ReadOnlyField()
     upvoted = serializers.SerializerMethodField()
     hands_raised = serializers.SerializerMethodField()
+    parent = CommentSerializer()
     class Meta:
         model = Comment
         fields = ['id', 'is_active', 'content', 'mention', 'author', 'post', 'parent', 'upvoted', 'num_vote_up', 'hands_raised', 'hands_count', 'created_at']
@@ -29,6 +30,9 @@ class CommentCreateSerializer(serializers.ModelSerializer):
         if(r):
             raise serializers.ValidationError(
                 {"content": "Content is too short!"})
+        if(len(data['content']) > 1000):
+                raise serializers.ValidationError(
+                    {"content": "Text content is too long!"})
         return data
         
 class CommentChildCreateSerializer(serializers.ModelSerializer):
@@ -42,6 +46,9 @@ class CommentChildCreateSerializer(serializers.ModelSerializer):
         if(r):
             raise serializers.ValidationError(
                 {"content": "Content is too short!"})
+        if(len(data['content']) > 1000):
+                raise serializers.ValidationError(
+                    {"content": "Text content is too long!"})
         return data
         
 class CommentRetriveSerializer(serializers.ModelSerializer):

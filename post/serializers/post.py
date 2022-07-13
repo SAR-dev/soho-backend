@@ -94,9 +94,9 @@ class PostCreateSerializer(serializers.ModelSerializer):
             if(data['release_time'] is None):
                 raise serializers.ValidationError(
                     {"release_time": "Release time is required for this type of post!"})
-            if(len(data['link']) < 4):
-                raise serializers.ValidationError(
-                    {"link": "Premier link in required!"})
+            # if(len(data['link']) < 4):
+            #     raise serializers.ValidationError(
+            #         {"link": "Premier link in required!"})
             data['duration'] = None
             data['content'] = ''
             data['images'] = ''
@@ -286,9 +286,9 @@ class PostUpdateSerializer(serializers.ModelSerializer):
             if(data['release_time'] is None):
                 raise serializers.ValidationError(
                     {"release_time": "Release time is required for this type of post!"})
-            if(len(data['link']) < 4):
-                raise serializers.ValidationError(
-                    {"link": "Premier link in required!"})
+            # if(len(data['link']) < 4):
+            #     raise serializers.ValidationError(
+            #         {"link": "Premier link in required!"})
             data['duration'] = None
             data['content'] = ''
             data['images'] = ''

@@ -30,7 +30,7 @@ class CommentCreateSerializer(serializers.ModelSerializer):
         if(r):
             raise serializers.ValidationError(
                 {"content": "Content is too short!"})
-        if(len(data['content']) > 5000):
+        if(len(data['content']) > 1000):
                 raise serializers.ValidationError(
                     {"content": "Text content is too long!"})
         return data
@@ -46,6 +46,9 @@ class CommentChildCreateSerializer(serializers.ModelSerializer):
         if(r):
             raise serializers.ValidationError(
                 {"content": "Content is too short!"})
+        if(len(data['content']) > 1000):
+                raise serializers.ValidationError(
+                    {"content": "Text content is too long!"})
         return data
         
 class CommentRetriveSerializer(serializers.ModelSerializer):

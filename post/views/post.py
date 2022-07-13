@@ -154,7 +154,7 @@ class PostFilter(filters.FilterSet):
 
 class GroupPostListView(generics.ListAPIView):
     # permission_classes = [IsGroupSubscriber]
-    permission_classes = [permissions.IsAuthenticated]
+    # permission_classes = [permissions.IsAuthenticated]
     serializer_class = PostListSerializer
     pagination_class = PazeSizePagination
     filterset_class = PostFilter
@@ -180,7 +180,7 @@ class GroupPostListView(generics.ListAPIView):
 
 class CategoryPostListView(generics.ListAPIView):
     # permission_classes = [IsCategoryGroupSubscriber]
-    permission_classes = [permissions.IsAuthenticated]
+    # permission_classes = [permissions.IsAuthenticated]
     serializer_class = PostListSerializer
     pagination_class = PazeSizePagination
     filterset_class = PostFilter
@@ -189,7 +189,7 @@ class CategoryPostListView(generics.ListAPIView):
         return Post.published.select_related('group').filter(group__author__username=self.kwargs["username"], category__slug=self.kwargs["slug"])
 
 class SubCategoryPostListView(generics.ListAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    # permission_classes = [permissions.IsAuthenticated]
     serializer_class = PostListSerializer
     pagination_class = PazeSizePagination
     filterset_class = PostFilter

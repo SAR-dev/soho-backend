@@ -76,7 +76,7 @@ class PostGroupSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Group
-        fields = ['id', 'status', 'author', 'subscribers_count', 'subscribed', 'post_count', 'is_admin', 'is_moderator']
+        fields = ['id', 'status', 'author', 'members_name', 'subscribers_count', 'subscribed', 'post_count', 'is_admin', 'is_moderator']
 
     def get_post_count(self, obj):
         return Post.published.filter(group=obj).count()
@@ -144,3 +144,19 @@ class PostSerializer(serializers.ModelSerializer):
         objects = AwardSerializer(data = Award.objects.filter(Q(author_id=obj.group.author.id) | Q(public=True)) , many=True)
         objects.is_valid()
         return objects.data
+    
+class CommentSerializer(serializers.ModelSerializer):
+    author = UserSerializer()
+    mention = UserSerializer()
+    hands_count = serializers.ReadOnlyField()
+    upvoted = serializers.SerializerMethodField()
+    hands_raised = serializers.SerializerMethodField()
+    class Meta:
+        model = Comment
+        fields = ['id', 'is_active', 'content', 'mention', 'author', 'post', 'parent', 'upvoted', 'num_vote_up', 'hands_raised', 'hands_count', 'created_at']
+
+    def get_upvoted(self, obj):
+        return obj.votes.exists_up(self.context.get('request').user.id)
+
+    def get_hands_raised(self, obj):
+        return obj.hands.filter(pk=self.context.get('request').user.id).exists()

@@ -61,10 +61,9 @@ class ClapCountView(views.APIView):
 
     def get(self, request):
         try:
-            activities = Activity.objects.filter(verb="clapped", reciever_id=request.user.id).annotate(claps=Count('reciever'))
-            print(activities)
+            claps = Activity.objects.filter(verb="clapped", reciever_id=request.user.id).count()
             return response.Response({
-                'blacklisted': '',
+                'claps': claps,
             })
         except ObjectDoesNotExist:
             raise NotFound(detail="Error 404, Not Found!", code=404)

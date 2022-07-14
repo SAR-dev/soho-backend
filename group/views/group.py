@@ -1,3 +1,4 @@
+from django.dispatch import receiver
 from django_filters import rest_framework as filters
 from datetime import datetime, timedelta, date
 from django.db.models import Count
@@ -8,12 +9,11 @@ from rest_framework import generics, views, response, permissions, exceptions, s
 from rest_framework import filters as rest_framework_filters
 from django.shortcuts import get_object_or_404
 from django.core.serializers import serialize
-from group.serializers.group import GroupListSerializer, GroupUpdateSerializer, GroupRetriveSerializer,GroupRulesRetriveSerializer, GroupSubscribersSerializer, GroupBlacklistsSerializer, GroupLeaderboardSerializer
+from group.serializers.group import GroupListSerializer, GroupUpdateSerializer, GroupRetriveSerializer, GroupRulesRetriveSerializer, GroupSubscribersSerializer, GroupBlacklistsSerializer, GroupLeaderboardSerializer
 from rest_framework.exceptions import NotFound, PermissionDenied
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth import get_user_model
 User = get_user_model()
-
 
 class IsNotBlacklisted(permissions.BasePermission):
     message = 'You can not view this route!'
@@ -65,8 +65,9 @@ class GroupListView(generics.ListAPIView):
     serializer_class = GroupListSerializer
     queryset = Group.objects.all()
     pagination_class = PazeSizePagination
-    filter_backends = [rest_framework_filters.SearchFilter]
-    search_fields = ['slogan', 'author__username', 'author__first_name', 'author__last_name']
+    # filter_backends = [rest_framework_filters.SearchFilter]
+    # search_fields = ['slogan', 'author__username', 'author__first_name', 'author__last_name']
+    filterset_class = GroupFilter
 
 
 class GroupSubscribedListView(generics.ListAPIView):
@@ -93,7 +94,8 @@ class GroupRetriveView(generics.RetrieveAPIView):
             )
         except ObjectDoesNotExist:
             raise NotFound(detail="Error 404, Not Found!", code=404)
-        
+
+
 class GroupRulesRetriveView(generics.RetrieveAPIView):
     # permission_classes = [IsNotBlacklisted]
     serializer_class = GroupRulesRetriveSerializer
@@ -141,7 +143,7 @@ class GroupSubscribeView(views.APIView):
     #         group = Group.objects.select_related('author').get(
     #             author__username=username
     #         )
-            
+
     #         subscribed = False
     #         if group.subscribers.filter(pk=request.user.id).exists():
     #             subscribed = True
@@ -168,17 +170,18 @@ class GroupSubscribeView(views.APIView):
             group = Group.objects.select_related('author').get(
                 author__username=username
             )
-            
+
             subscribed = False
             if group.subscribers.filter(pk=request.user.id).exists():
                 subscribed = True
-            elif group.status=='public':
+            elif group.status == 'public':
                 group.subscribers.add(request.user.id)
                 subscribed = True
                 Activity.objects.create(target=request.user.id, group_id=group.id,
-                                sender_id=request.user.id, target_type="user", verb="joined")
-            elif group.status=='private':
-                raise PermissionDenied(detail="Sorry, joining in private group is turned of temporarily!")
+                                        sender_id=request.user.id, target_type="user", verb="joined")
+            elif group.status == 'private':
+                raise PermissionDenied(
+                    detail="Sorry, joining in private group is turned of temporarily!")
             return response.Response({
                 'subscribed': subscribed,
             })
@@ -192,7 +195,8 @@ class GroupSubscribeView(views.APIView):
             )
 
             if group.author.id == request.user.id:
-                raise PermissionDenied(detail="Sorry, You can not unsubscribe your own group!")
+                raise PermissionDenied(
+                    detail="Sorry, You can not unsubscribe your own group!")
             else:
                 subscribed = True
                 if group.subscribers.filter(pk=request.user.id).exists():
@@ -206,6 +210,7 @@ class GroupSubscribeView(views.APIView):
 
         except ObjectDoesNotExist:
             raise NotFound(detail="Error 404, Not Found!", code=404)
+
 
 class GroupBlacklistSubscriberView(views.APIView):
     permission_classes = [IsGroupAuthor]
@@ -242,7 +247,8 @@ class GroupBlacklistSubscriberView(views.APIView):
                     'blacklisted': blacklisted,
                 })
             else:
-                raise PermissionDenied(detail="Sorry, You can not blacklist yourself!")
+                raise PermissionDenied(
+                    detail="Sorry, You can not blacklist yourself!")
         except ObjectDoesNotExist:
             raise NotFound(detail="Error 404, Not Found!", code=404)
 
@@ -300,29 +306,34 @@ class GroupBlacklistView(generics.ListAPIView):
 class GroupLeaderboardView(generics.ListAPIView):
     # permission_classes = [permissions.IsAuthenticated]
     serializer_class = GroupLeaderboardSerializer
-    
+
     def get_queryset(self):
         try:
             prev_week_date = datetime.now() - timedelta(days=7)
             prev_week_week = prev_week_date.isocalendar()[1]
             prev_week_year = prev_week_date.year
-            
+
             prev_month_date = date.today().replace(day=1) - timedelta(days=1)
             prev_month_month = prev_month_date.month
             prev_month_year = prev_month_date.year
             ranking = ''
             if self.kwargs['timespan'] == "weekly":
-                ranking = Activity.objects.select_related('group').filter(group__author__username = self.kwargs['username'], verb="clapped", created_at__week=prev_week_week, created_at__year=prev_week_year).values('reciever').annotate(claps=Count('reciever')).order_by('-claps')[:100]
+                ranking = Activity.objects.select_related('group').filter(group__author__username=self.kwargs['username'], verb="clapped", created_at__week=prev_week_week, created_at__year=prev_week_year).values(
+                    'reciever').annotate(claps=Count('reciever')).order_by('-claps')[:100]
             elif self.kwargs['timespan'] == "monthly":
-                ranking = Activity.objects.select_related('group').filter(group__author__username = self.kwargs['username'], verb="clapped", created_at__month=prev_month_month, created_at__year=prev_month_year).values('reciever').annotate(claps=Count('reciever')).order_by('-claps')[:100]
+                ranking = Activity.objects.select_related('group').filter(group__author__username=self.kwargs['username'], verb="clapped", created_at__month=prev_month_month, created_at__year=prev_month_year).values(
+                    'reciever').annotate(claps=Count('reciever')).order_by('-claps')[:100]
             elif self.kwargs['timespan'] == "alltime":
-                ranking = Activity.objects.select_related('group').filter(group__author__username = self.kwargs['username'], verb="clapped").values('reciever').annotate(claps=Count('reciever')).order_by('-claps')[:100]
+                ranking = Activity.objects.select_related('group').filter(group__author__username=self.kwargs['username'], verb="clapped").values(
+                    'reciever').annotate(claps=Count('reciever')).order_by('-claps')[:100]
             else:
-                ranking = Activity.objects.select_related('group').filter(group__author__username = self.kwargs['username'], verb="clapped").values('reciever').annotate(claps=Count('reciever')).order_by('-claps')[:100]
+                ranking = Activity.objects.select_related('group').filter(group__author__username=self.kwargs['username'], verb="clapped").values(
+                    'reciever').annotate(claps=Count('reciever')).order_by('-claps')[:100]
             results = []
-            
+
             for item in ranking:
-                results.append({'reciever': User.objects.get(pk=item['reciever']), 'claps': item["claps"]})
+                results.append({'reciever': User.objects.get(
+                    pk=item['reciever']), 'claps': item["claps"]})
             return results
         except ObjectDoesNotExist:
             raise NotFound(detail="Error 404, Not Found!", code=404)

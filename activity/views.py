@@ -10,7 +10,8 @@ from django_filters import rest_framework as filters
 from django_filters import MultipleChoiceFilter
 from activity.models import Activity
 from activity.serializers import ActivitySerializer, ActivityNotificationsSerializer
-        
+from django.db.models import Count
+
 class ActivityListView(generics.ListAPIView):
     # permission_classes = [permissions.IsAuthenticated]
     serializer_class = ActivitySerializer
@@ -51,6 +52,19 @@ class MarkSingleNotificationAsRead(views.APIView):
             Activity.unread.filter(reciever=request.user, id=pk).update(done=True)
             return response.Response({
                 'done': True,
+            })
+        except ObjectDoesNotExist:
+            raise NotFound(detail="Error 404, Not Found!", code=404)
+        
+class ClapCountView(views.APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        try:
+            activities = Activity.objects.filter(verb="clapped", reciever_id=request.user.id).annotate(claps=Count('reciever'))
+            print(activities)
+            return response.Response({
+                'blacklisted': '',
             })
         except ObjectDoesNotExist:
             raise NotFound(detail="Error 404, Not Found!", code=404)

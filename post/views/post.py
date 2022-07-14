@@ -4,7 +4,7 @@ from moderator.models import Moderator
 from activity.models import Activity
 from group.models import Group, Category
 from choice.models import Choice
-from reward.models import Reward
+# from reward.models import Reward
 from award.models import Award
 from post.serializers.post import PostCreateSerializer, PostReriveSerializer, PostListSerializer, PostUpdateSerializer, DiscussionPostCreateSerializer, PostBookmarksSerializer
 from utils.paginations import PazeSizePagination

@@ -61,7 +61,7 @@ INSTALLED_APPS = [
     'choice',
     'comment',
     'moderator',
-    'reward',
+    # 'reward',
     'award',
     'activity',
     'advertisement',

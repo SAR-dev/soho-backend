@@ -66,7 +66,7 @@ class GroupListView(generics.ListAPIView):
     queryset = Group.objects.all()
     pagination_class = PazeSizePagination
     filter_backends = [rest_framework_filters.SearchFilter]
-    search_fields = ['slogan', 'author__username', 'author__first_name', 'author__last_name']
+    search_fields = ['slogan', 'author__username', 'author__first_name', 'author__last_name','members_name']
 
 
 class GroupSubscribedListView(generics.ListAPIView):

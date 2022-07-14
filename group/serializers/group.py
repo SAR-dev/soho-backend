@@ -26,7 +26,7 @@ class GroupListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Group
-        fields = ['id', 'title', 'slogan', 'members_name', 'color', 'status', 'subscribers_count',
+        fields = ['id', 'title', 'slogan', 'members_name', 'color', 'status', 'cover', 'subscribers_count',
                   'subscribed', 'author', 'created_at', 'updated_at']
 
     def get_subscribed(self, obj):

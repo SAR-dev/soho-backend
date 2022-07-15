@@ -1,5 +1,5 @@
 from rest_framework.views import APIView
-from post.models import Post, PostClaps
+from post.models import Post, PostClaps, PostAwards
 from moderator.models import Moderator
 from activity.models import Activity
 from group.models import Group, Category
@@ -515,46 +515,19 @@ class PostChoiceVoteView(views.APIView):
 class AddAwardView(views.APIView):
     permission_classes = [IsPostGroupAndAwardSubscriber]
 
-    def get(self, request, pk, id):
-        try:
-            post = Post.published.get(pk=pk)
-            return response.Response(post.awards)
-        except ObjectDoesNotExist:
-            raise NotFound(detail="Error 404, Not Found!", code=404)
-
     def post(self, request, pk, id):
         try:
             post = Post.canvote.get(pk=pk)
-            auth_user = self.request.user
-            if str(id) in post.awards:
-                if auth_user.id not in post.awards[str(id)]:
-                    post.awards[str(id)].append(auth_user.id)
-                    post.save()
+            award = Award.objects.get(pk=id)
+            if (award.price == 0 or award.public == True):
+                PostAwards.objects.create(post=post, author=request.user, award=award)
+                Activity.objects.create(target=post.id, group_id=post.group.id,
+                                sender_id=request.user.id, reciever_id=post.author.id, target_type="post", verb="awarded")
+                return response.Response({
+                    'awarded': True,
+                })
             else:
-                post.awards[str(id)] = []
-                post.awards[str(id)].append(auth_user.id)
-                post.save()
-            # post awarded
-            Activity.objects.create(target=post.id, group_id=post.group.id,
-                                    sender_id=request.user.id, reciever_id=post.author.id, target_type="post", verb="awarded")
-            return response.Response(post.awards)
+                raise PermissionDenied(detail="Sorry, this award is not free!")
         except ObjectDoesNotExist:
             raise NotFound(detail="Error 404, Not Found!", code=404)
 
-    def delete(self, request, pk, id):
-        try:
-            post = Post.canvote.get(pk=pk)
-            auth_user = self.request.user
-            if str(id) in post.awards:
-                if auth_user.id in post.awards[str(id)]:
-                    post.awards[str(id)].remove(auth_user.id)
-                    post.save()
-            else:
-                post.awards[str(id)] = []
-                post.save()
-            # post unawarded
-            Activity.objects.filter(target=post.id, group_id=post.group.id,
-                                    sender_id=request.user.id, reciever_id=post.author.id, target_type="post", verb="awarded").delete()
-            return response.Response(post.awards)
-        except ObjectDoesNotExist:
-            raise NotFound(detail="Error 404, Not Found!", code=404)

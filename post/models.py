@@ -4,6 +4,7 @@ from django.utils.deconstruct import deconstructible
 from imagekit.processors import ResizeToFit
 from imagekit.models import ProcessedImageField
 from django.db import models
+from award.models import Award
 from group.models import Group, Category, SubCategory
 from image.models import Image
 from choice.models import Choice
@@ -97,9 +98,8 @@ class Post(models.Model):
         User, related_name='bookmarks', default=None, blank=True)
     claps = models.ManyToManyField(
         User, related_name='claps', default=None, blank=True, through='PostClaps')
-
-    awards = models.JSONField(default=dict)
-    # {user_id: award_id}
+    awards = models.ManyToManyField(
+        Award, related_name='awards', default=None, blank=True, through='PostAwards')
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -127,5 +127,11 @@ class Post(models.Model):
 
 class PostClaps(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+class PostAwards(models.Model):
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    award = models.ForeignKey(Award, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)

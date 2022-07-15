@@ -1,6 +1,6 @@
 from base_serializers import SubCategorySerializer, UserSerializer, GroupSerializer, ImageSerializer, CategorySerializer, ChoiceSerializer, PostSerializer, PostGroupSerializer
 from rest_framework import serializers
-from post.models import Post
+from post.models import Post, PostAwards
 from moderator.models import Moderator
 from award.models import Award
 from comment.models import Comment
@@ -16,6 +16,11 @@ class AwardSerializer(serializers.ModelSerializer):
     class Meta:
         model = Award
         fields = ['id', 'name', 'logo', 'description', 'price']
+
+class PostAwardSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PostAwards
+        fields = ['author', 'post', 'award']
 
 class PostCategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -151,6 +156,7 @@ class PostListSerializer(serializers.ModelSerializer):
     author = UserSerializer()
     images = ImageSerializer(many=True)
     choices = ChoiceSerializer(many=True)
+    awards = PostAwardSerializer(many=True)
     category = PostCategorySerializer()
     sub_category = SubCategorySerializer()
     group = PostGroupSerializer()
@@ -163,6 +169,7 @@ class PostListSerializer(serializers.ModelSerializer):
     choices_voted = serializers.SerializerMethodField()
     comments_count = serializers.SerializerMethodField()
     available_awards = serializers.SerializerMethodField()
+    awards = serializers.SerializerMethodField()
 
     class Meta:
         model = Post
@@ -192,6 +199,11 @@ class PostListSerializer(serializers.ModelSerializer):
     def get_comments_count(self, obj):
         return Comment.objects.filter(post=obj.id).count()
     
+    def get_awards(self, obj):
+        objects = PostAwardSerializer(data = PostAwards.objects.filter(author = self.context.get('request').user.id, post=obj.id) , many=True)
+        objects.is_valid()
+        return objects.data
+
     def get_available_awards(self, obj):
         objects = AwardSerializer(data = Award.objects.filter(Q(author_id=obj.group.author.id) | Q(public=True)) , many=True)
         objects.is_valid()
@@ -203,6 +215,7 @@ class PostReriveSerializer(serializers.ModelSerializer):
     images = ImageSerializer(many=True)
     choices = ChoiceSerializer(many=True)
     category = PostCategorySerializer()
+    # awards = PostAwardSerializer(many=True)
     sub_category = SubCategorySerializer()
     group = PostGroupSerializer()
     thumbnail = ImageSerializer()
@@ -213,6 +226,7 @@ class PostReriveSerializer(serializers.ModelSerializer):
     choices_voted = serializers.SerializerMethodField()
     comments_count = serializers.SerializerMethodField()
     available_awards = serializers.SerializerMethodField()
+    awards = serializers.SerializerMethodField()
 
     class Meta:
         model = Post
@@ -235,6 +249,11 @@ class PostReriveSerializer(serializers.ModelSerializer):
     def get_comments_count(self, obj):
         return Comment.objects.filter(post=obj.id).count()
     
+    def get_awards(self, obj):
+        objects = PostAwardSerializer(data = PostAwards.objects.filter(author = self.context.get('request').user.id, post=obj.id) , many=True)
+        objects.is_valid()
+        return objects.data
+
     def get_available_awards(self, obj):
         objects = AwardSerializer(data = Award.objects.filter(Q(author_id=obj.group.author.id) | Q(public=True)) , many=True)
         objects.is_valid()

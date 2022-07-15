@@ -54,3 +54,15 @@ class MarkSingleNotificationAsRead(views.APIView):
             })
         except ObjectDoesNotExist:
             raise NotFound(detail="Error 404, Not Found!", code=404)
+
+class ClapsCounter(views.APIView):
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def get(self, request):
+        try:
+            claps = Activity.objects.filter(reciever=request.user, verb="clapped").count()
+            return response.Response({
+                'claps': claps,
+            })
+        except ObjectDoesNotExist:
+            raise NotFound(detail="Error 404, Not Found!", code=404)

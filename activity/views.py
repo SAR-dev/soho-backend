@@ -10,7 +10,8 @@ from django_filters import rest_framework as filters
 from django_filters import MultipleChoiceFilter
 from activity.models import Activity
 from activity.serializers import ActivitySerializer, ActivityNotificationsSerializer
-        
+from django.db.models import Count
+
 class ActivityListView(generics.ListAPIView):
     # permission_classes = [permissions.IsAuthenticated]
     serializer_class = ActivitySerializer

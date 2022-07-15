@@ -1,4 +1,4 @@
-from base_serializers import SubCategorySerializer, UserSerializer, ProfileSerializer, GroupSerializer, ImageSerializer, CategorySerializer, ChoiceSerializer, PostSerializer, PostGroupSerializer
+from base_serializers import SubCategorySerializer, UserSerializer, GroupSerializer, ImageSerializer, CategorySerializer, ChoiceSerializer, PostSerializer, PostGroupSerializer
 from rest_framework import serializers
 from post.models import Post
 from moderator.models import Moderator
@@ -179,7 +179,8 @@ class PostListSerializer(serializers.ModelSerializer):
         return obj.bookmarks.filter(pk=self.context.get('request').user.id).exists()
 
     def get_upvoted(self, obj):
-        return obj.votes.exists_up(self.context.get('request').user.id)
+        return self.context.get('request').user in obj.claps.all()
+        # return obj.votes.exists_up(self.context.get('request').user.id)
 
     def get_choices_voted(self, obj):
         voted = False
@@ -222,7 +223,7 @@ class PostReriveSerializer(serializers.ModelSerializer):
         return obj.bookmarks.filter(pk=self.context.get('request').user.id).exists()
 
     def get_upvoted(self, obj):
-        return obj.votes.exists_up(self.context.get('request').user.id)
+        return self.context.get('request').user in obj.claps.all()
 
     def get_choices_voted(self, obj):
         voted = False

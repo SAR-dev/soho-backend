@@ -1,4 +1,4 @@
-from base_serializers import UserSerializer, CommentSerializer, ProfileSerializer, GroupSerializer, ImageSerializer, CategorySerializer, ChoiceSerializer, PostSerializer
+from base_serializers import UserSerializer, CommentSerializer, GroupSerializer, ImageSerializer, CategorySerializer, ChoiceSerializer, PostSerializer
 from rest_framework import serializers
 from .models import Comment
 import re

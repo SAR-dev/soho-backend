@@ -1,10 +1,9 @@
 from rest_framework.views import APIView
-from post.models import Post
+from post.models import Post, PostClaps
 from moderator.models import Moderator
 from activity.models import Activity
 from group.models import Group, Category
 from choice.models import Choice
-# from reward.models import Reward
 from award.models import Award
 from post.serializers.post import PostCreateSerializer, PostReriveSerializer, PostListSerializer, PostUpdateSerializer, DiscussionPostCreateSerializer, PostBookmarksSerializer
 from utils.paginations import PazeSizePagination
@@ -18,7 +17,7 @@ from django_filters import rest_framework as filters
 from django_filters import MultipleChoiceFilter
 from django.db.models import Q
 from django.utils import timezone
-
+from django.utils.timezone import now
 
 class IsGroupAuthor(permissions.BasePermission):
     message = 'You can not view this route!'
@@ -289,47 +288,22 @@ class PostUpdateView(generics.RetrieveUpdateDestroyAPIView):
 class PostVoteView(views.APIView):
     permission_classes = [IsPostGroupSubscriber]
 
-    def get(self, request, pk):
-        try:
-            post = Post.published.get(pk=pk)
-            auth_user = self.request.user
-            return response.Response({
-                'count': post.votes.count_up(),
-                'upvoted': post.votes.exists_up(auth_user.id),
-            })
-        except ObjectDoesNotExist:
-            raise NotFound(detail="Error 404, Not Found!", code=404)
-
     def post(self, request, pk):
         try:
             post = Post.canvote.get(pk=pk)
-            auth_user = self.request.user
-            post.votes.up(auth_user.id)
-            # post clapped
-            Activity.objects.create(target=post.id, group_id=post.group.id,
-                                    sender_id=request.user.id, reciever_id=post.author.id, target_type="post", verb="clapped")
-            return response.Response({
-                'count': post.votes.count_up(),
-                'upvoted': True,
-            })
+            if (post.claps.count() <= 10):
+                PostClaps.objects.create(post=post, author=request.user)
+                count = post.claps.count()
+                Activity.objects.create(target=post.id, group_id=post.group.id,
+                                        sender_id=request.user.id, reciever_id=post.author.id, target_type="post", verb="clapped")
+                return response.Response({
+                    'count': count,
+                    'upvoted': True,
+                })
+            else:
+                raise PermissionDenied(detail="You have already clapped 10 times!")
         except ObjectDoesNotExist:
             raise NotFound(detail="Error 404, Not Found!", code=404)
-
-    def delete(self, request, pk):
-        try:
-            post = Post.canvote.get(pk=pk)
-            auth_user = self.request.user
-            post.votes.delete(auth_user.id)
-            # post unclapped
-            Activity.objects.filter(target=post.id, group_id=post.group.id,
-                                    sender_id=request.user.id, reciever_id=post.author.id, target_type="post", verb="clapped").delete()
-            return response.Response({
-                'count': post.votes.count_up(),
-                'upvoted': False,
-            })
-        except ObjectDoesNotExist:
-            raise NotFound(detail="Error 404, Not Found!", code=404)
-
 
 class PostBookmarkView(views.APIView):
     permission_classes = [IsPostGroupSubscriber]
@@ -438,7 +412,6 @@ class PostCanCommentView(views.APIView):
     def delete(self, request, pk):
         try:
             post = Post.published.get(pk=pk)
-            print(post)
             post.can_comment = False
             post.save()
             return response.Response({

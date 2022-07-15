@@ -4,7 +4,7 @@ from image.models import Image
 from activity.models import Activity
 from django.contrib.auth import get_user_model
 User = get_user_model()
-from base_serializers import UserSerializer, ProfileSerializer, GroupSerializer, ImageSerializer, CategorySerializer
+from base_serializers import UserSerializer, GroupSerializer, ImageSerializer, CategorySerializer
 
 class ActivitySerializer(serializers.ModelSerializer):
     sender = UserSerializer()

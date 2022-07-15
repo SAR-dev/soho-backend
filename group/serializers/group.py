@@ -1,4 +1,4 @@
-from base_serializers import UserSerializer, ProfileSerializer, GroupSerializer, ImageSerializer, CategorySerializer
+from base_serializers import UserSerializer, GroupSerializer, ImageSerializer, CategorySerializer
 from rest_framework import serializers
 from group.models import Group, Category
 from moderator.models import Moderator

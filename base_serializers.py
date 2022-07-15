@@ -5,7 +5,6 @@ from award.models import Award
 from comment.models import Comment
 from group.models import Group, Category, SubCategory
 from image.models import Image
-from profiles.models import Profile
 from choice.models import Choice
 from django.contrib.auth import get_user_model
 User = get_user_model()
@@ -18,14 +17,6 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ['id', 'username', 'first_name',
                   'last_name', 'is_active', 'avatar']
 
-
-class ProfileSerializer(serializers.ModelSerializer):
-    user = UserSerializer(read_only=True)
-
-    class Meta:
-        model = Profile
-        fields = ['id', 'bio', 'nickname', 'date_of_birth',
-                  'email_address', 'phone_number', 'website', 'blood_group', 'user']
 
 
 class GroupSerializer(serializers.ModelSerializer):

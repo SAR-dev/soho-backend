@@ -10,6 +10,7 @@ from choice.models import Choice
 from vote.models import VoteModel
 from django.core.validators import RegexValidator
 from django.contrib.auth import get_user_model
+from django.utils.timezone import now
 User = get_user_model()
 
 
@@ -27,7 +28,7 @@ class RenameAndRelocateImage(object):
 rename_and_relocate_premier = RenameAndRelocateImage("images/premier/")
 
 
-class Post(VoteModel, models.Model):
+class Post(models.Model):
     class PostPublished(models.Manager):
         def get_queryset(self):
             return super().get_queryset().filter(status='published')
@@ -87,9 +88,6 @@ class Post(VoteModel, models.Model):
     can_vote = models.BooleanField(default=True)
     can_comment = models.BooleanField(default=True)
 
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
     author = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='author')
     group = models.ForeignKey(
@@ -97,8 +95,14 @@ class Post(VoteModel, models.Model):
 
     bookmarks = models.ManyToManyField(
         User, related_name='bookmarks', default=None, blank=True)
+    claps = models.ManyToManyField(
+        User, related_name='claps', default=None, blank=True, through='PostClaps')
+
     awards = models.JSONField(default=dict)
     # {user_id: award_id}
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     objects = models.Manager()
     published = PostPublished()
@@ -115,8 +119,13 @@ class Post(VoteModel, models.Model):
         return self.bookmarks.count()
     
     @property
-    def votes_count(self):
-        return self.votes.count_up()
+    def num_vote_up(self):
+        return self.claps.count()
 
     def __str__(self):
         return str(self.author)
+
+class PostClaps(models.Model):
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)

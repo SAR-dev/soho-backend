@@ -18,7 +18,6 @@ class UserSerializer(serializers.ModelSerializer):
                   'last_name', 'is_active', 'avatar']
 
 
-
 class GroupSerializer(serializers.ModelSerializer):
     author = UserSerializer()
     is_admin = serializers.SerializerMethodField()

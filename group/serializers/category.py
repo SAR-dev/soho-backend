@@ -12,6 +12,16 @@ class GroupCategoryCreateSerializer(serializers.ModelSerializer):
         fields = ['id', 'color', 'name', 'slug', 'about', 'emoji']
         read_only_fields = ['slug']
 
+        def validate(self, data):
+            user = None
+            request = self.context.get("request")
+            if request and hasattr(request, "user"):
+                user = request.user
+
+            if(data['name'] == 'default'):
+                raise serializers.ValidationError(
+                        {"name": "Pick another name"})
+
 
 class GroupCategoryListSerializer(serializers.ModelSerializer):
     sub_categories = serializers.SerializerMethodField()

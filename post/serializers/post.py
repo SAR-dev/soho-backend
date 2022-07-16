@@ -48,7 +48,6 @@ class DiscussionPostCreateSerializer(serializers.ModelSerializer):
                     {"images": "Select images that you uploaded only"})
         data['release_time'] = None
         data['thumbnail'] = None
-        data['awards'] = {}
         return data
 
 
@@ -76,7 +75,6 @@ class PostCreateSerializer(serializers.ModelSerializer):
             data['duration'] = None
             data['thumbnail'] = None
             data['choices'] = ''
-            data['awards'] = {}
 
         elif(data['post_type'] == 'announcement'):
             if(len(data['content']) < 10):
@@ -126,7 +124,6 @@ class PostCreateSerializer(serializers.ModelSerializer):
             data['choices'] = ''
             data['category'] = None
             data['link'] = None
-            data['awards'] = {}
 
         elif(data['post_type'] == 'poll'):
             if(len(data['content']) < 10):
@@ -147,7 +144,6 @@ class PostCreateSerializer(serializers.ModelSerializer):
             data['category'] = None
             data['release_time'] = None
             data['link'] = None
-            data['awards'] = {}
 
         return data
 

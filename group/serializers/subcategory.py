@@ -11,3 +11,8 @@ class GroupSubCategoryCreateSerializer(serializers.ModelSerializer):
         model = SubCategory
         fields = ['id', 'name', 'slug']
         read_only_fields = ['slug']
+
+class ChangeParentCategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SubCategory
+        fields = ['category']

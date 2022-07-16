@@ -5,7 +5,7 @@ from django.shortcuts import get_object_or_404
 from django.core.serializers import serialize
 from rest_framework.exceptions import NotFound
 from django.core.exceptions import ObjectDoesNotExist
-from group.serializers.subcategory import GroupSubCategoryCreateSerializer
+from group.serializers.subcategory import GroupSubCategoryCreateSerializer, ChangeParentCategorySerializer
 from django.contrib.auth import get_user_model
 User = get_user_model()
 from django_filters import rest_framework as filters
@@ -29,3 +29,8 @@ class GroupSubCategoryCreateView(generics.CreateAPIView):
     permission_classes = [IsGroupAuthor]
     queryset = SubCategory.objects.all()
     serializer_class = GroupSubCategoryCreateSerializer
+
+class ChangeParentCategoryView(generics.UpdateAPIView):
+    permission_classes = [IsGroupAuthor]
+    queryset = SubCategory.objects.all()
+    serializer_class = ChangeParentCategorySerializer

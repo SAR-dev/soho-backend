@@ -80,8 +80,6 @@ class GroupRulesRetriveSerializer(serializers.ModelSerializer):
             return False
 
 class GroupRulesUpdateSerializer(serializers.ModelSerializer):
-    author = UserSerializer()
-
     class Meta:
         model = Group
         fields = ['rules']

@@ -20,7 +20,7 @@ class ActivityListView(generics.ListAPIView):
         return Activity.objects.select_related('group').filter(group__author__username=self.kwargs["username"])[:5]
     
 class ActivityNotificationsListView(generics.ListAPIView):
-    # permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
     serializer_class = ActivityNotificationsSerializer
     pagination_class = PazeSizePagination
 
@@ -33,7 +33,7 @@ class ActivityNotificationsListView(generics.ListAPIView):
         return Activity.objects.filter(reciever=self.request.user).order_by('done', '-id')
     
 class MarkAllNotificationsAsRead(views.APIView):
-    # permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
     
     def post(self, request):
         try:

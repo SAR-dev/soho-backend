@@ -11,7 +11,6 @@ from uuid import uuid4
 from image.models import Image
 from nanoid import generate
 from django.contrib.auth import get_user_model
-from django.contrib.postgres.fields import ArrayField
 User = get_user_model()
 
 @deconstructible
@@ -24,9 +23,6 @@ class RenameAndRelocateImage(object):
         filename = '{}.{}'.format(uuid4().hex, ext)
         return os.path.join(self.path, filename)
 rename_and_relocate_cover = RenameAndRelocateImage("images/group/cover/")
-
-def get_default_list():
-    return ",".split(",")
 
 class Group(models.Model):
     class PublicGroup(models.Manager):
@@ -46,7 +42,7 @@ class Group(models.Model):
     
     title = models.CharField(max_length=50, null=True, blank=True)
     slogan = models.CharField(max_length=30, null=True, blank=True)
-    rules = ArrayField(models.TextField(default=None, blank=True, null=True), blank=True, default=get_default_list)
+    rules = models.TextField(default=None, blank=True, null=True)
     members_name = models.CharField(max_length=10, default="Members")
     color = models.CharField(max_length=100, default="#6B46C1", validators=[
         RegexValidator(

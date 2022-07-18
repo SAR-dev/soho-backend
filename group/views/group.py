@@ -9,7 +9,7 @@ from rest_framework import generics, views, response, permissions, exceptions, s
 from rest_framework import filters as rest_framework_filters
 from django.shortcuts import get_object_or_404
 from django.core.serializers import serialize
-from group.serializers.group import GroupListSerializer, GroupUpdateSerializer, GroupRetriveSerializer, GroupRulesRetriveSerializer, GroupSubscribersSerializer, GroupBlacklistsSerializer, GroupLeaderboardSerializer
+from group.serializers.group import GroupListSerializer, GroupRulesUpdateSerializer, GroupUpdateSerializer, GroupRetriveSerializer, GroupRulesRetriveSerializer, GroupSubscribersSerializer, GroupBlacklistsSerializer, GroupLeaderboardSerializer
 from rest_framework.exceptions import NotFound, PermissionDenied
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth import get_user_model
@@ -109,6 +109,17 @@ class GroupRulesRetriveView(generics.RetrieveAPIView):
         except ObjectDoesNotExist:
             raise NotFound(detail="Error 404, Not Found!", code=404)
 
+class GroupRulesUpdateView(generics.UpdateAPIView):
+    permission_classes = [IsGroupAuthor]
+    serializer_class = GroupRulesUpdateSerializer
+
+    def get_object(self):
+        try:
+            return Group.objects.select_related('author').get(
+                author__username=self.kwargs['username']
+            )
+        except ObjectDoesNotExist:
+            raise NotFound(detail="Error 404, Not Found!", code=404)
 
 class GroupUpdateView(generics.RetrieveUpdateAPIView):
     permission_classes = [IsGroupAuthor]

@@ -17,6 +17,11 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         model = User
         fields = ['first_name', 'last_name', 'username', 'avatar']
 
+class UserAvatarUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['avatar']
+
 
 class UserListSerializer(serializers.ModelSerializer):
     class Meta:

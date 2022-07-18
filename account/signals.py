@@ -9,6 +9,6 @@ User = get_user_model()
 @receiver(post_save, sender=User)
 def create_related(sender, instance, created, *args, **kwargs):
     if instance and created:
-        instance.group = Group.objects.create(author=instance)
+        instance.group = Group.objects.create(author=instance, rules={})
         instance.category = Category.objects.create(name="default", group=instance.group)
         instance.advertisement = Advertisement.objects.create(author=instance)

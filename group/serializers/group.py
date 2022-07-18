@@ -62,11 +62,29 @@ class GroupRetriveSerializer(serializers.ModelSerializer):
             return False
     
 class GroupRulesRetriveSerializer(serializers.ModelSerializer):
+    is_admin = serializers.SerializerMethodField()
+    is_moderator = serializers.SerializerMethodField()
     author = UserSerializer()
 
     class Meta:
         model = Group
-        fields = ['id', 'rules', 'author', 'created_at', 'updated_at']
+        fields = ['id', 'rules', 'author', 'is_admin', 'is_moderator', 'created_at', 'updated_at']
+
+    def get_is_admin(self, obj):
+        return obj.author == self.context.get('request').user
+    
+    def get_is_moderator(self, obj):
+        try:
+            return Moderator.verified.filter(moderator = self.context.get('request').user, admin = obj.author).exists()
+        except:
+            return False
+
+class GroupRulesUpdateSerializer(serializers.ModelSerializer):
+    author = UserSerializer()
+
+    class Meta:
+        model = Group
+        fields = ['rules']
 
 
 class GroupUpdateSerializer(serializers.ModelSerializer):

@@ -1,5 +1,5 @@
 from django.urls import path
-from .views.group import GroupListView, GroupSubscribedListView, GroupRetriveView, GroupRulesRetriveView, GroupUpdateView, GroupSubscribersView, GroupBlacklistSubscriberView,GroupSubscribeView, GroupBlacklistView, GroupLeaderboardView
+from .views.group import GroupListView, GroupRulesUpdateView, GroupSubscribedListView, GroupRetriveView, GroupRulesRetriveView, GroupUpdateView, GroupSubscribersView, GroupBlacklistSubscriberView,GroupSubscribeView, GroupBlacklistView, GroupLeaderboardView
 from .views.category import GroupCategoryListView, GroupCategoryCreateView, GroupCategoryRetriveView, GroupCategoryUpdateView
 from .views.subcategory import GroupSubCategoryCreateView, ChangeParentCategoryView
 
@@ -10,6 +10,7 @@ urlpatterns = [
     path('subscribed/', GroupSubscribedListView.as_view(), name='group-subscribed-list'),
     path('<str:username>/', GroupRetriveView.as_view(), name='group-retrive'),
     path('<str:username>/rules/', GroupRulesRetriveView.as_view(), name='group-rules-retrive'),
+    path('<str:username>/rules/update/', GroupRulesUpdateView.as_view(), name='group-rules-update'),
     path('<str:username>/update/', GroupUpdateView.as_view(), name='group-update'),
     # path('<str:username>/subscribe/<str:token>/', GroupSubscribeView.as_view(), name='group-subscribe'),
     path('<str:username>/subscribe/', GroupSubscribeView.as_view(), name='group-subscribe'),

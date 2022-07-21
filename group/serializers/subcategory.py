@@ -12,6 +12,11 @@ class GroupSubCategoryCreateSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'slug', 'emoji']
         read_only_fields = ['slug']
 
+        def validate(self, data):
+            if(len(data['emoji']) < 1):
+                raise serializers.ValidationError(
+                        {"emoji": "Select a emoji"})
+
 class ChangeParentCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = SubCategory

@@ -105,13 +105,6 @@ class Category(models.Model):
             message="Invalid slug format! Slug should be between 3-50 characters. Use hyphen '-' or underscore '_' between letters if needed. ",
         ),
     ])
-    about = models.CharField(max_length=200, default=None, blank=True, null=True)
-    color = models.CharField(max_length=100, default="#d5b60a", validators=[
-        RegexValidator(
-            regex='^#[0-9a-fA-F]{6}$',
-            message="Invalid color format. RGB hex color format needed.",
-        ),
-    ])
     emoji = models.CharField(max_length=500, default="")
     group = models.ForeignKey(Group, on_delete=models.CASCADE, related_name='group', default=None, blank=True, null=True)
     
@@ -131,6 +124,7 @@ def unique_slug(sender, instance, *args, **kwargs):
         
 class SubCategory(models.Model):
     name = models.CharField(max_length=100)
+    emoji = models.CharField(max_length=500, default="")
     slug = models.SlugField(max_length=50 ,unique=True, validators=[
         RegexValidator(
             regex='^[a-z0-9_-]{3,50}$',

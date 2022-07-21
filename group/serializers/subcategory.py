@@ -9,7 +9,7 @@ User = get_user_model()
 class GroupSubCategoryCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = SubCategory
-        fields = ['id', 'name', 'slug']
+        fields = ['id', 'name', 'slug', 'emoji']
         read_only_fields = ['slug']
 
 class ChangeParentCategorySerializer(serializers.ModelSerializer):

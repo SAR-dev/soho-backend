@@ -9,15 +9,10 @@ User = get_user_model()
 class GroupCategoryCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = ['id', 'color', 'name', 'slug', 'about', 'emoji']
+        fields = ['id', 'name', 'slug']
         read_only_fields = ['slug']
 
         def validate(self, data):
-            user = None
-            request = self.context.get("request")
-            if request and hasattr(request, "user"):
-                user = request.user
-
             if(data['name'] == 'default'):
                 raise serializers.ValidationError(
                         {"name": "Pick another name"})
@@ -28,7 +23,7 @@ class GroupCategoryListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Category
-        fields = ['id', 'color', 'name', 'slug', 'about', 'sub_categories', 'emoji']
+        fields = ['id', 'name', 'slug', 'sub_categories']
 
     def get_sub_categories(self, obj):
         objects = SubCategorySerializer(data=SubCategory.objects.filter(category_id=obj.id), many=True)
@@ -39,11 +34,11 @@ class GroupCategoryListSerializer(serializers.ModelSerializer):
 class GroupCategoryReriveSerializer(serializers.ModelSerializer):
     class Meta:
         model=Category
-        fields=['id', 'color', 'name', 'slug', 'about', 'emoji']
+        fields=['id', 'name', 'slug']
 
 
 class GroupCategoryUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model=Category
-        fields=['id', 'color', 'name', 'slug', 'about', 'emoji']
+        fields=['id', 'name', 'slug']
         read_only_fields=['slug']

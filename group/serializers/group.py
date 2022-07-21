@@ -12,7 +12,7 @@ User = get_user_model()
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = ['id', 'color', 'name', 'slug', 'about']
+        fields = ['id', 'name', 'slug']
 
 class AwardSerializer(serializers.ModelSerializer):
     class Meta:

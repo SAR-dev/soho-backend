@@ -40,7 +40,6 @@ class CategoryFilter(filters.FilterSet):
     o = filters.OrderingFilter(
         fields=(
             ('name', 'name'),
-            ('about', 'about'),
             ('created_at', 'created_at'),
         ),
     )
@@ -49,7 +48,6 @@ class CategoryFilter(filters.FilterSet):
         model = Category
         fields = {
             'name': ['icontains'],
-            'about': ['icontains'],
         }
 
 class GroupCategoryListView(generics.ListAPIView):

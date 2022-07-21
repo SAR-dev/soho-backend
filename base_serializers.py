@@ -39,12 +39,12 @@ class CategorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Category
-        fields = ['id', 'color', 'name', 'slug', 'about', 'group', 'emoji']
+        fields = ['id', 'name', 'slug', 'group']
         
 class SubCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = SubCategory
-        fields = ['id', 'name', 'slug']
+        fields = ['id', 'name', 'slug', 'emoji']
         
 class AwardSerializer(serializers.ModelSerializer):
     class Meta:

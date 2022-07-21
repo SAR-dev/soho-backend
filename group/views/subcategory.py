@@ -11,7 +11,7 @@ User = get_user_model()
 from django_filters import rest_framework as filters
 
 
-class IsGroupAuthor(permissions.BasePermission):
+class IsCategoryGroupAuthor(permissions.BasePermission):
     message = 'Only author has access!'
 
     def has_permission(self, request, view):
@@ -21,16 +21,31 @@ class IsGroupAuthor(permissions.BasePermission):
         except ObjectDoesNotExist:
             raise NotFound(detail="Error 404, Not Found!", code=404)
         
-              
+class IsSubCategoryGroupAuthor(permissions.BasePermission):
+    message = 'Only author has access!'
+
+    def has_permission(self, request, view):
+        try:
+            subcategory = SubCategory.objects.get(slug=view.kwargs.get('slug'))
+            return subcategory.category.group.author.id == request.user.id
+        except ObjectDoesNotExist:
+            raise NotFound(detail="Error 404, Not Found!", code=404)
+        
 class GroupSubCategoryCreateView(generics.CreateAPIView):
     def perform_create(self, serializer):
         serializer.save(category = Category.objects.get(slug=self.kwargs['slug']))
 
-    permission_classes = [IsGroupAuthor]
+    permission_classes = [IsCategoryGroupAuthor]
     queryset = SubCategory.objects.all()
     serializer_class = GroupSubCategoryCreateSerializer
 
 class ChangeParentCategoryView(generics.UpdateAPIView):
-    permission_classes = [IsGroupAuthor]
-    queryset = SubCategory.objects.all()
+    permission_classes = [IsSubCategoryGroupAuthor]
     serializer_class = ChangeParentCategorySerializer
+    lookup_field = "slug"
+    
+    def get_queryset(self):
+        try:
+            return SubCategory.objects.filter(slug = self.kwargs["slug"])
+        except ObjectDoesNotExist:
+            raise NotFound(detail="Error 404, Not Found!", code=404)

@@ -21,7 +21,7 @@ urlpatterns = [
     path('<str:username>/categories/', GroupCategoryListView.as_view(), name='group-categories'),
     path('<str:username>/categories/create/', GroupCategoryCreateView.as_view(), name='group-categories-create'),
     path('<str:username>/categories/<str:slug>/', GroupCategoryRetriveView.as_view(), name='group-categories-retrive'),
-    path('<str:username>/subcategory/<str:slug>/relocate', ChangeParentCategoryView.as_view(), name='group-subcategory-relocate'),
+    path('<str:username>/subcategory/<str:slug>/relocate/', ChangeParentCategoryView.as_view(), name='group-subcategory-relocate'),
     path('<str:username>/categories/<str:slug>/update/', GroupCategoryUpdateView.as_view(), name='group-categories-update'),
     path('<str:username>/categories/<str:slug>/subcategory/create/', GroupSubCategoryCreateView.as_view(), name='group-sub-categoriy-create'),
 ]

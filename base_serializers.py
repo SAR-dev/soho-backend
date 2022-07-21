@@ -54,7 +54,7 @@ class AwardSerializer(serializers.ModelSerializer):
 class PostCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = ['id', 'name', 'slug', 'color']
+        fields = ['id', 'name', 'slug']
         
 class PostGroupSerializer(serializers.ModelSerializer):
     author = UserSerializer()

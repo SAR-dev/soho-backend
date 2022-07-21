@@ -25,7 +25,7 @@ class PostAwardSerializer(serializers.ModelSerializer):
 class PostCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = ['id', 'name', 'slug', 'color']
+        fields = ['id', 'name', 'slug']
 
 
 class DiscussionPostCreateSerializer(serializers.ModelSerializer):

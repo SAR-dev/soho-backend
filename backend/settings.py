@@ -13,9 +13,6 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 from pathlib import Path
 import os
 import dj_database_url
-from dotenv import load_dotenv
-
-load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -110,14 +107,17 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': os.getenv("DB_ENGINE"),
-        'NAME': os.getenv("DB_NAME"),
-        'USER': os.getenv("DB_USER"),
-        'PASSWORD': os.getenv("DB_PASSWORD"),
-        'HOST': os.getenv("DB_HOST"),
-        'PORT': os.getenv("DB_PORT"),
-    }
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.postgresql_psycopg2',
+    #     'NAME': 'soho',
+    #     'USER': 'postgres',
+    #     'PASSWORD': 'admin',
+    #     'HOST': 'localhost',
+    #     'PORT': '5432',
+    # }
+    'default': dj_database_url.config(
+        'DATABASE_URL'
+    )
 }
 
 
@@ -198,3 +198,8 @@ FRONTEND_URL = ["https://soho-k9ir.onrender.com"]
 ALLOWED_HOSTS = ["*"]
 # WHITENOISE
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
+# AWS
+AWS_ACCESS_KEY_ID='AKIAUARQSP2LZYCTL2X6' 
+AWS_SECRET_ACCESS_KEY='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'
+AWS_STORAGE_BUCKET_NAME='soho-bucket'

@@ -72,7 +72,7 @@ class Post(models.Model):
     category = models.ForeignKey(
         Category, related_name="category", on_delete=models.SET_NULL, default=None, blank=True, null=True)
     sub_category = models.ForeignKey(
-        SubCategory, related_name="sub_category", on_delete=models.SET_NULL, default=None, blank=True, null=True)
+        SubCategory, related_name="sub_category", on_delete=models.CASCADE, default=None, blank=True, null=True)
     release_time = models.DateTimeField(null=True)
     duration = models.DurationField(null=True)
     thumbnail = models.ForeignKey(

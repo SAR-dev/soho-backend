@@ -1,7 +1,7 @@
 from django.urls import path
 from .views.group import GroupListView, GroupRulesUpdateView, GroupSubscribedListView, GroupRetriveView, GroupRulesRetriveView, GroupUpdateView, GroupSubscribersView, GroupBlacklistSubscriberView,GroupSubscribeView, GroupBlacklistView, GroupLeaderboardView
 from .views.category import GroupCategoryListView, GroupCategoryCreateView, GroupCategoryRetriveView, GroupCategoryUpdateView
-from .views.subcategory import GroupSubCategoryCreateView, ChangeParentCategoryView
+from .views.subcategory import GroupSubCategoryCreateView, ChangeParentCategoryView, UpdateSubCategoryView
 
 app_name = 'group'
 
@@ -22,6 +22,7 @@ urlpatterns = [
     path('<str:username>/categories/create/', GroupCategoryCreateView.as_view(), name='group-categories-create'),
     path('<str:username>/categories/<str:slug>/', GroupCategoryRetriveView.as_view(), name='group-categories-retrive'),
     path('<str:username>/subcategory/<str:slug>/relocate/', ChangeParentCategoryView.as_view(), name='group-subcategory-relocate'),
+    path('<str:username>/subcategory/<str:slug>/update/', UpdateSubCategoryView.as_view(), name='group-subcategory-update'),
     path('<str:username>/categories/<str:slug>/update/', GroupCategoryUpdateView.as_view(), name='group-categories-update'),
     path('<str:username>/categories/<str:slug>/subcategory/create/', GroupSubCategoryCreateView.as_view(), name='group-sub-categoriy-create'),
 ]

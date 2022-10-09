@@ -5,7 +5,7 @@ from django.shortcuts import get_object_or_404
 from django.core.serializers import serialize
 from rest_framework.exceptions import NotFound
 from django.core.exceptions import ObjectDoesNotExist
-from group.serializers.subcategory import GroupSubCategoryCreateSerializer, ChangeParentCategorySerializer
+from group.serializers.subcategory import GroupSubCategoryCreateSerializer, ChangeParentCategorySerializer, UpdateSubCategorySerializer
 from django.contrib.auth import get_user_model
 User = get_user_model()
 from django_filters import rest_framework as filters
@@ -42,6 +42,18 @@ class GroupSubCategoryCreateView(generics.CreateAPIView):
 class ChangeParentCategoryView(generics.UpdateAPIView):
     permission_classes = [IsSubCategoryGroupAuthor]
     serializer_class = ChangeParentCategorySerializer
+    lookup_field = "slug"
+    
+    def get_queryset(self):
+        try:
+            return SubCategory.objects.filter(slug = self.kwargs["slug"])
+        except ObjectDoesNotExist:
+            raise NotFound(detail="Error 404, Not Found!", code=404)
+
+
+class UpdateSubCategoryView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsSubCategoryGroupAuthor]
+    serializer_class = UpdateSubCategorySerializer
     lookup_field = "slug"
     
     def get_queryset(self):

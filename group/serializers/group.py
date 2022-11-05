@@ -32,7 +32,15 @@ class GroupListSerializer(serializers.ModelSerializer):
     def get_subscribed(self, obj):
         return obj.subscribers.filter(pk=self.context.get('request').user.id).exists()
 
+class GroupPaymentRetriveSerializer(serializers.ModelSerializer):
+    author = UserSerializer()
+    is_admin = serializers.SerializerMethodField()
+    is_moderator = serializers.SerializerMethodField()
 
+    class Meta:
+        model = Group
+        fields = ['id', 'author', 'product_id', 'price_id', 'coupon_id', 'promotion_id','promotion_code', 'is_admin', 'is_moderator', 'created_at', 'updated_at']
+        
 class GroupRetriveSerializer(serializers.ModelSerializer):
     author = UserSerializer()
     subscribers_count = serializers.ReadOnlyField()

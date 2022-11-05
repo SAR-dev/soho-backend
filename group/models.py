@@ -1,10 +1,12 @@
+from tokenize import group
+from unicodedata import category
 from django.db import models
 from django.core.validators import RegexValidator
 from imagekit.models import ProcessedImageField
 from imagekit.processors import ResizeToFit
 from utils.generators import generate_unique_slug
 from django.dispatch import receiver
-from django.db.models.signals import pre_save, post_save
+from django.db.models.signals import pre_save, post_save, pre_delete
 from django.utils.deconstruct import deconstructible
 import os
 from uuid import uuid4
@@ -65,6 +67,12 @@ class Group(models.Model):
     blacklists = models.ManyToManyField(User, related_name='blacklists', default=None, blank=True)
     moderators = models.ManyToManyField(User, related_name='moderators', default=None, blank=True)
 
+    product_id = models.CharField(max_length=100, default="")
+    price_id = models.CharField(max_length=100, default="")
+    coupon_id = models.CharField(max_length=100, default="")
+    promotion_id = models.CharField(max_length=100, default="")
+    promotion_code = models.CharField(max_length=100, default="")
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
@@ -121,6 +129,11 @@ class Category(models.Model):
 def unique_slug(sender, instance, *args, **kwargs):
     if len(instance.slug) == 0:
         instance.slug = generate_unique_slug(Category, instance.name)
+
+@receiver(pre_delete, sender=Category)
+def set_default_category_for_subcategory(sender, instance, *args, **kwargs):
+    cat = Category.objects.get(name = 'default', group__id = instance.group.id)
+    SubCategory.objects.filter(category = instance).update(category_id = cat.id)
         
 class SubCategory(models.Model):
     name = models.CharField(max_length=100)
@@ -131,7 +144,7 @@ class SubCategory(models.Model):
             message="Invalid slug format! Slug should be between 3-50 characters. Use hyphen '-' or underscore '_' between letters if needed. ",
         ),
     ])
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='parent_category', default=None, blank=True, null=True)
+    category = models.ForeignKey(Category, on_delete=models.DO_NOTHING, related_name='parent_category', default=None, blank=True, null=True)
     
     objects = models.Manager()
     

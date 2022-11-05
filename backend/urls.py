@@ -26,4 +26,5 @@ urlpatterns = [
     path('api/advertisement/', include('advertisement.urls', namespace='advertisement')),
     # path('api/warning/', include('warning.urls', namespace='warning')),
     # path('api/contact/', include('contact.urls', namespace='contact')),
+    path('api/payment/', include('payment.urls', namespace='payment')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -123,16 +123,3 @@ class Account(AbstractBaseUser, PermissionsMixin):
     class Meta:
        ordering = ['-id']
 
-
-@receiver(pre_save, sender=Account)
-def save(sender, instance, *args, **kwargs):
-    # Replace avatar
-    if instance.avatar:
-        try:
-            acc = Account.objects.get(id=instance.id)
-            pre = acc.avatar
-            post = instance.avatar
-            if (pre != post and pre != "images/avatar.jpg"):
-                pre.delete(save=True)
-        except:
-            pass

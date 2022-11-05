@@ -34,12 +34,10 @@ class GroupListSerializer(serializers.ModelSerializer):
 
 class GroupPaymentRetriveSerializer(serializers.ModelSerializer):
     author = UserSerializer()
-    is_admin = serializers.SerializerMethodField()
-    is_moderator = serializers.SerializerMethodField()
 
     class Meta:
         model = Group
-        fields = ['id', 'author', 'product_id', 'price_id', 'coupon_id', 'promotion_id','promotion_code', 'is_admin', 'is_moderator', 'created_at', 'updated_at']
+        fields = ['id', 'author', 'product_id', 'price_id', 'coupon_id', 'promotion_id','promotion_code', 'unit_amount', 'percent_off', 'sub_interval', 'currency', 'product_image']
         
 class GroupRetriveSerializer(serializers.ModelSerializer):
     author = UserSerializer()

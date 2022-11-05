@@ -44,6 +44,7 @@ class PaymentProductView(views.APIView):
                     )
 
                     group.product_id = product.id
+                    group.product_image = product.images[0]
                     group.save()
 
                 return response.Response({
@@ -76,9 +77,9 @@ class PaymentPriceView(views.APIView):
                         currency=data["currency"],
                         billing_scheme="per_unit",
                         product=product.id,
-                        unit_amount=data["cents_amount"],
+                        unit_amount=data["unit_amount"],
                         recurring={
-                            "interval": data["interval"],
+                            "interval": data["sub_interval"],
                             "interval_count": 1
                         },
                         metadata={
@@ -89,6 +90,9 @@ class PaymentPriceView(views.APIView):
                     )
 
                     group.price_id = price.id
+                    group.currency = price.currency
+                    group.unit_amount = price.unit_amount
+                    price.sub_interval = price.recurring.interval
                     group.save()
 
                     return response.Response({
@@ -117,8 +121,8 @@ class PaymentCouponView(views.APIView):
                         stripe.Coupon.delete(group.coupon_id)
 
                     coupon = stripe.Coupon.create(
-                        amount_off=data["amount_off"],
-                        currency=data["currency"],
+                        percent_off=data["percent_off"],
+                        currency=group.currency,
                         duration="once",
                         applies_to={
                             "products": [product.id]
@@ -131,50 +135,34 @@ class PaymentCouponView(views.APIView):
                     )
 
                     group.coupon_id = coupon.id
+                    group.percent_off = coupon.percent_off
+
+                    if(len(group.promotion_id) > 0):
+                        stripe.PromotionCode.modify(
+                            group.promotion_id,
+                            active=False
+                        )
+
+                    promotion = stripe.PromotionCode.create(
+                        coupon=coupon.id,
+                        metadata={
+                            "user_id": request.user.id,
+                            "group_id": group.id,
+                            "email": request.user.email
+                        }
+                    )
+
+                    group.promotion_id = promotion.id
+                    group.promotion_code = promotion.code
+
                     group.save()
 
                     return response.Response({
                         'coupon': coupon,
+                        'promotion': promotion
                     })
                 else:
                     raise NotFound(detail="Error 404, Not Found!", code=404)
-        except ObjectDoesNotExist:
-            raise NotFound(detail="Error 404, Not Found!", code=404)
-        
-class PaymentPromotionView(views.APIView):
-    permission_classes = [permissions.IsAuthenticated]
-
-    def post(self, request):
-        try:
-            group = Group.objects.select_related('author').get(
-                    author__username=request.user.username
-                )
-            if(len(group.coupon_id) > 0):
-                coupon = stripe.Coupon.retrieve(group.coupon_id)
-                if(len(group.promotion_id) > 0):
-                    stripe.PromotionCode.modify(
-                        group.promotion_id,
-                        active=False
-                    )
-
-                promotion = stripe.PromotionCode.create(
-                    coupon=coupon.id,
-                    metadata={
-                        "user_id": request.user.id,
-                        "group_id": group.id,
-                        "email": request.user.email
-                    }
-                )
-
-                group.promotion_id = promotion.id
-                group.promotion_code = promotion.code
-                group.save()
-                
-                return response.Response({
-                    'promotion': promotion,
-                })
-            else:
-                raise NotFound(detail="Error 404, Not Found!", code=404)
         except ObjectDoesNotExist:
             raise NotFound(detail="Error 404, Not Found!", code=404)
     
@@ -191,6 +179,8 @@ class PaymentPromotionView(views.APIView):
                 )
                 group.promotion_id = ""
                 group.promotion_code = ""
+                group.coupon_id = ""
+                group.percent_off = 0
                 group.save()
             else:
                 raise NotFound(detail="Error 404, Not Found!", code=404)
@@ -257,6 +247,9 @@ class PaymentWebhookView(views.APIView):
             session = event['data']['object']
             line_items = stripe.checkout.Session.list_line_items(session['id'], limit=1)
             print(line_items["data"])
+            # subscribe user to group
+            # send notification to user
+            # send notification to group
 
         # Passed signature verification
         return HttpResponse(status=200)

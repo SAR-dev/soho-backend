@@ -5,9 +5,8 @@ class ProductCreateSerializer(serializers.Serializer):
 
 class PriceCreateSerializer(serializers.Serializer):
     currency = serializers.CharField()
-    interval = serializers.CharField()
-    cents_amount = serializers.IntegerField()
+    sub_interval = serializers.CharField()
+    unit_amount = serializers.IntegerField()
 
 class CouponCreateSerializer(serializers.Serializer):
-    amount_off = serializers.IntegerField()
-    currency = serializers.CharField()
+    percent_off = serializers.IntegerField()

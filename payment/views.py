@@ -253,3 +253,47 @@ class PaymentWebhookView(views.APIView):
 
         # Passed signature verification
         return HttpResponse(status=200)
+
+
+# [<LineItem item id=li_1M19fjR8Kb5Lo3JnCUYQnNN0 at 0x7fa559e34b80> JSON: {
+#   "amount_discount": 0,
+#   "amount_subtotal": 5,
+#   "amount_tax": 0,
+#   "amount_total": 5,
+#   "currency": "usd",
+#   "description": "soho/sar-dev",
+#   "id": "li_1M19fjR8Kb5Lo3JnCUYQnNN0",
+#   "object": "item",
+#   "price": {
+#     "active": true,
+#     "billing_scheme": "per_unit",
+#     "created": 1667713532,
+#     "currency": "usd",
+#     "custom_unit_amount": null,
+#     "id": "price_1M11fkR8Kb5Lo3JnoTqjeEy6",
+#     "livemode": false,
+#     "lookup_key": null,
+#     "metadata": {
+#       "email": "sayedarrafi142403@gmail.com",
+#       "group_id": "2",
+#       "user_id": "2"
+#     },
+#     "nickname": null,
+#     "object": "price",
+#     "product": "prod_MkWKiapWU3yG6Z",
+#     "recurring": {
+#       "aggregate_usage": null,
+#       "interval": "month",
+#       "interval_count": 1,
+#       "trial_period_days": null,
+#       "usage_type": "licensed"
+#     },
+#     "tax_behavior": "unspecified",
+#     "tiers_mode": null,
+#     "transform_quantity": null,
+#     "type": "recurring",
+#     "unit_amount": 5,
+#     "unit_amount_decimal": "5"
+#   },
+#   "quantity": 1
+# }]

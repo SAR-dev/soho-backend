@@ -49,7 +49,7 @@ class GroupRetriveSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Group
-        fields = ['id', 'title', 'slogan', 'members_name', 'color',  'status', 'cover', 'subscribers_count',
+        fields = ['id', 'title', 'slogan', 'members_name', 'color',  'status', 'cover', 'subscribers_count', 'currency', 'unit_amount', 'price_id',
                   'subscribed', 'post_count', 'author', 'is_admin', 'is_moderator', 'created_at', 'updated_at']
 
     def get_post_count(self, obj):

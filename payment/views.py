@@ -92,7 +92,7 @@ class PaymentPriceView(views.APIView):
                     group.price_id = price.id
                     group.currency = price.currency
                     group.unit_amount = price.unit_amount
-                    price.sub_interval = price.recurring.interval
+                    group.sub_interval = price.recurring.interval
                     group.save()
 
                     return response.Response({

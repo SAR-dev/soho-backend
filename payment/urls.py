@@ -5,7 +5,7 @@ app_name = 'payment'
 
 urlpatterns = [
     path('products/', PaymentProductView.as_view(), name='product'),
-    path('price/', PaymentPriceView.as_view(), name='price'),
+    path('prices/', PaymentPriceView.as_view(), name='price'),
     path('coupons/', PaymentCouponView.as_view(), name='coupon'),
     path('checkout/', PaymentCheckoutView.as_view(), name='checkout'),
     path('webhook/', PaymentWebhookView.as_view(), name='webhook'),

@@ -32,7 +32,13 @@ class GroupListSerializer(serializers.ModelSerializer):
     def get_subscribed(self, obj):
         return obj.subscribers.filter(pk=self.context.get('request').user.id).exists()
 
+class GroupPaymentRetriveSerializer(serializers.ModelSerializer):
+    author = UserSerializer()
 
+    class Meta:
+        model = Group
+        fields = ['id', 'author', 'product_id', 'price_id', 'coupon_id', 'promotion_id','promotion_code', 'unit_amount', 'percent_off', 'sub_interval', 'currency', 'product_image']
+        
 class GroupRetriveSerializer(serializers.ModelSerializer):
     author = UserSerializer()
     subscribers_count = serializers.ReadOnlyField()
@@ -43,7 +49,7 @@ class GroupRetriveSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Group
-        fields = ['id', 'title', 'slogan', 'members_name', 'color',  'status', 'cover', 'subscribers_count',
+        fields = ['id', 'title', 'slogan', 'members_name', 'color',  'status', 'cover', 'subscribers_count', 'currency', 'unit_amount', 'sub_interval', 'price_id',
                   'subscribed', 'post_count', 'author', 'is_admin', 'is_moderator', 'created_at', 'updated_at']
 
     def get_post_count(self, obj):

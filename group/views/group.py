@@ -9,7 +9,7 @@ from rest_framework import generics, views, response, permissions, exceptions, s
 from rest_framework import filters as rest_framework_filters
 from django.shortcuts import get_object_or_404
 from django.core.serializers import serialize
-from group.serializers.group import GroupListSerializer, GroupRulesUpdateSerializer, GroupUpdateSerializer, GroupRetriveSerializer, GroupRulesRetriveSerializer, GroupSubscribersSerializer, GroupBlacklistsSerializer, GroupLeaderboardSerializer
+from group.serializers.group import GroupListSerializer, GroupRulesUpdateSerializer, GroupPaymentRetriveSerializer, GroupUpdateSerializer, GroupRetriveSerializer, GroupRulesRetriveSerializer, GroupSubscribersSerializer, GroupBlacklistsSerializer, GroupLeaderboardSerializer
 from rest_framework.exceptions import NotFound, PermissionDenied
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth import get_user_model
@@ -96,7 +96,18 @@ class GroupRetriveView(generics.RetrieveAPIView):
         except ObjectDoesNotExist:
             raise NotFound(detail="Error 404, Not Found!", code=404)
 
+class GroupPaymentRetriveView(generics.RetrieveAPIView):
+    # permission_classes = [IsNotBlacklisted]
+    serializer_class = GroupPaymentRetriveSerializer
 
+    def get_object(self):
+        try:
+            return Group.objects.select_related('author').get(
+                author__username=self.kwargs['username']
+            )
+        except ObjectDoesNotExist:
+            raise NotFound(detail="Error 404, Not Found!", code=404)
+        
 class GroupRulesRetriveView(generics.RetrieveAPIView):
     # permission_classes = [IsNotBlacklisted]
     serializer_class = GroupRulesRetriveSerializer
@@ -149,33 +160,6 @@ class GroupSubscribeView(views.APIView):
             })
         except ObjectDoesNotExist:
             raise NotFound(detail="Error 404, Not Found!", code=404)
-
-    # def post(self, request, username, token=None):
-    #     try:
-    #         group = Group.objects.select_related('author').get(
-    #             author__username=username
-    #         )
-
-    #         subscribed = False
-    #         if group.subscribers.filter(pk=request.user.id).exists():
-    #             subscribed = True
-    #         elif group.status=='public':
-    #             if group.token == token:
-    #                 group.subscribers.add(request.user.id)
-    #                 subscribed = True
-    #                 # group joined
-    #                 Activity.objects.create(target=request.user.id, group_id=group.id,
-    #                                 sender_id=request.user.id, target_type="user", verb="joined")
-    #             else:
-    #                 raise PermissionDenied(detail="Sorry, the token is either invalid or expired expired!")
-    #         elif group.status=='private':
-    #             group.subscribers.add(request.user.id)
-    #             subscribed = True
-    #         return response.Response({
-    #             'subscribed': subscribed,
-    #         })
-    #     except ObjectDoesNotExist:
-    #         raise NotFound(detail="Error 404, Not Found!", code=404)
 
     def post(self, request, username, token=None):
         try:

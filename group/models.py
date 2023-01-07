@@ -39,6 +39,13 @@ class Group(models.Model):
         ('public', 'Public'),
         ('private', 'Private'),
     )
+
+    SUBSCRIPTION_INTERVALS = (
+        ('week', 'week'),
+        ('month', 'month'),
+        ('year', 'year'),
+        ('', '')
+    )
     
     author = models.OneToOneField(User, on_delete=models.CASCADE)
     
@@ -62,10 +69,22 @@ class Group(models.Model):
                                  default='images/cover.jpg',
                                  processors=[ResizeToFit(width=1400)],
                                  format='JPEG',
-                                 options={'quality': 60})
+                                 options={'quality': 75})
     subscribers = models.ManyToManyField(User, related_name='subscribers', default=None, blank=True)
     blacklists = models.ManyToManyField(User, related_name='blacklists', default=None, blank=True)
     moderators = models.ManyToManyField(User, related_name='moderators', default=None, blank=True)
+
+    product_id = models.CharField(max_length=100, default="")
+    price_id = models.CharField(max_length=100, default="")
+    coupon_id = models.CharField(max_length=100, default="")
+    promotion_id = models.CharField(max_length=100, default="")
+
+    unit_amount = models.IntegerField(default=0)
+    percent_off = models.DecimalField(max_digits=5, decimal_places=2, default=0)
+    promotion_code = models.CharField(max_length=100, default="")
+    currency = models.CharField(max_length=100, default="")
+    product_image = models.CharField(max_length=250, default="")
+    sub_interval = models.CharField(max_length=10, choices=SUBSCRIPTION_INTERVALS, default='')
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

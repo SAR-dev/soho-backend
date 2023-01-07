@@ -14,6 +14,7 @@ from pathlib import Path
 import os
 import dj_database_url
 
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -62,6 +63,7 @@ INSTALLED_APPS = [
     'advertisement',
     'warning',
     'contact',
+    'payment',
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True
@@ -107,19 +109,20 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.postgresql_psycopg2',
-    #     'NAME': 'soho',
-    #     'USER': 'postgres',
-    #     'PASSWORD': 'admin',
-    #     'HOST': 'localhost',
-    #     'PORT': '5432',
-    # }
     'default': dj_database_url.config(
         'DATABASE_URL'
     )
 }
-
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'soho',
+#         'USER': 'postgres',
+#         'PASSWORD': 'admin',
+#         'HOST': 'localhost',
+#         'PORT': '5432',
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -193,13 +196,24 @@ DRF_FIREBASE_AUTH = {
 }
 
 # AUTHENTICATION_BACKENDS = ['account.auth.EmailOrUsernameModelBackend']
-FRONTEND_URL = ["https://soho-k9ir.onrender.com"]
 # ONLY FOR DEVELOPMENT
 ALLOWED_HOSTS = ["*"]
-# WHITENOISE
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # AWS
-AWS_ACCESS_KEY_ID='AKIAUARQSP2LZYCTL2X6' 
-AWS_SECRET_ACCESS_KEY='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'
-AWS_STORAGE_BUCKET_NAME='soho-bucket'
+# STATICFILES_STORAGE = 'storages.backends.s3boto3.S3StaticStorage'
+# DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+# AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
+# AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
+# AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME')
+# AWS_QUERYSTRING_AUTH = False
+
+# HEROKU TEST
+STATICFILES_STORAGE = "whitenoise.django.GzipManifestStaticFilesStorage"
+
+# STRIPE
+STRIPE_PUBLISHABLE_KEY="pk_test_51Kt3niR8Kb5Lo3Jn1MK9Ljf7NWGHSPqqe7s10DQ1wM0sZAFjTgLQ2Jq1GsApgkydn4D2dHJrDdkG1mpVG7ZUAJPr00TRzWzrp4"
+STRIPE_SECRET_KEY="sk_test_51Kt3niR8Kb5Lo3Jnfv85sSNu6UiSybTQfo501YGeTYpCPo9SgKJQqJjgnFJSgPbyyEHGMUb7HS3v1PifsPSEdrua00gxMYVlqq"
+STRIPE_WEBHOOK_KEY="whsec_f32c275a21bfa57e1707d5ff1c3b95c3f2edd7e356a2970d86e68e5e61ecada4"
+STRIPE_LIVEMODE = False
+
+FRONTEND_URL="https://joinsoho.xyz"

@@ -94,6 +94,7 @@ smsapi-client==2.5.0
 social-auth-app-django==4.0.0
 social-auth-core==4.1.0
 sqlparse==0.4.1
+stripe==4.2.0
 swapper==1.1.2.post1
 toml==0.10.2
 twilio==7.3.0

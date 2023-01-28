@@ -291,7 +291,7 @@ class PostVoteView(views.APIView):
     def post(self, request, pk):
         try:
             post = Post.canvote.get(pk=pk)
-            if (post.claps.count() <= 10):
+            if (post.claps.count() < 10):
                 PostClaps.objects.create(post=post, author=request.user)
                 count = post.claps.count()
                 Activity.objects.create(target=post.id, group_id=post.group.id,

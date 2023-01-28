@@ -25,4 +25,4 @@ class ChangeParentCategorySerializer(serializers.ModelSerializer):
 class UpdateSubCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = SubCategory
-        fields = ['name', 'emoji']
+        fields = ['name', 'emoji', 'slug']
